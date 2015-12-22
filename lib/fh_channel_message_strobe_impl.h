@@ -24,6 +24,7 @@
 #define INCLUDED_FH_CHANNEL_MESSAGE_STROBE_IMPL_H
 
 #include <../include/fhmanet/fh_channel_message_strobe.h>
+#include <../include/fhmanet/xorshift.h>
 
 namespace gr {
   namespace fhmanet {
@@ -32,9 +33,10 @@ namespace gr {
 		public gr::blocks::message_strobe
     {
     private:
-      /*boost::shared_ptr<boost::thread> d_thread;
+      boost::shared_ptr<boost::thread> d_thread;
       bool d_finished;
-      float d_period_ms;*/
+      float d_period_ms;
+      pmt::pmt_t d_msg;
       pmt::pmt_t d_msg2;
       double d_center_freq;
       float d_channel_width;
@@ -43,17 +45,20 @@ namespace gr {
       int d_freq_offset;
 	  boost::posix_time::ptime d_time;
 	  boost::posix_time::time_duration d_duration;
-	  int d_current_hop; //which hop in the sequence at the current time
-	  int d_hop_index; //must be <= sequence_length
+	  double d_current_hop; //which hop in the sequence at the current time
+	  double d_hop_index; //must be <= sequence_length
 	  
       void run();
 
     public:
-      fh_channel_message_strobe_impl(pmt::pmt_t msg, pmt::pmt_t msg2, 
-			double center_freq, float channel_width, int num_channels,
-			double sequence_length, int freq_offset, float period_ms);
+      fh_channel_message_strobe_impl(pmt::pmt_t msg2, double center_freq,
+			float channel_width, int num_channels, double sequence_length, 
+			int freq_offset);
       ~fh_channel_message_strobe_impl();
 
+      //void set_msg(pmt::pmt_t msg) { d_msg = msg; }
+      //pmt::pmt_t msg() const { return d_msg; }
+      
       void set_msg2(pmt::pmt_t msg2) { d_msg2 = msg2; }
       pmt::pmt_t msg2() const { return d_msg2; }
       

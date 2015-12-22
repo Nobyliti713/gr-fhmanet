@@ -88,8 +88,8 @@ namespace gr {
        int seed() const {return d_seed;}
     };
 
-  } // namespace fhmanet
-} // namespace gr
+  } /* namespace fhmanet */
+} /* namespace gr */
 
 #endif /* INCLUDED_XORSHIFT_H */
 

@@ -34,32 +34,34 @@
 #include <stdexcept>
 #include <string.h>
 #include <iostream>
+#include <cmath>
 
 namespace gr {
   namespace fhmanet {
 
     fh_channel_message_strobe::sptr
-    fh_channel_message_strobe::make(pmt::pmt_t msg, pmt::pmt_t msg2, 
-			double center_freq, float channel_width, int num_channels,
-			double sequence_length, int freq_offset, float period_ms)
+    fh_channel_message_strobe::make(pmt::pmt_t msg2, double center_freq, 
+			float channel_width, int num_channels, double sequence_length, 
+			int freq_offset)
     {
       return gnuradio::get_initial_sptr
-        (new fh_channel_message_strobe_impl(msg, msg2, center_freq, 
-			channel_width, num_channels, sequence_length, freq_offset, period_ms));
+        (new fh_channel_message_strobe_impl(msg2, center_freq, channel_width, 
+			num_channels, sequence_length, freq_offset));
     }
 
-    fh_channel_message_strobe_impl::fh_channel_message_strobe_impl(pmt::pmt_t msg, 
-			pmt::pmt_t msg2, double center_freq, float channel_width, int num_channels,
-			double sequence_length, int freq_offset, float period_ms)
+    fh_channel_message_strobe_impl::fh_channel_message_strobe_impl(pmt::pmt_t msg2, 
+			double center_freq, float channel_width, int num_channels, 
+			double sequence_length, int freq_offset)
       : message_strobe("fh_channel_message_strobe",
                  io_signature::make(0, 0, 0),
                  io_signature::make(0, 0, 0),
                  d_finished(false), d_period_ms(period_ms), d_msg(msg)),
-        d_msg2(msg2)
-        d_center_freq(center_freq)
-        d_channel_width(channel_width)
-        d_num_channels(num_channels)
-        d_sequence_length(sequence_length)
+        d_msg2(msg2),
+        d_period_ms(period_ms),
+        d_center_freq(center_freq),
+        d_channel_width(channel_width),
+        d_num_channels(num_channels),
+        d_sequence_length(sequence_length),
         d_freq_offset(freq_offset)
     {
       message_port_register_out(pmt::mp("freq_out"));
@@ -78,7 +80,7 @@ namespace gr {
     }
 
     bool
-    message_strobe_impl::start()
+    fh_channel_message_strobe_impl::start()
     {
       // NOTE: d_finished should be something explicitely thread safe. But since
       // nothing breaks on concurrent access, I'll just leave it as bool.
@@ -125,7 +127,7 @@ namespace gr {
 		d_current_hop = d_duration.total_milliseconds( d_time.time_of_day() ) 
 			/ d_period_ms;
 		
-		d_current_hop = d_current_hop % d_sequence_length;
+		d_current_hop = fmod(d_current_hop, d_sequence_length);
 
 		//these are the values for the PMTs	
 		d_msg = pmt::mp("freq", hop_sequence[d_current_hop]);
