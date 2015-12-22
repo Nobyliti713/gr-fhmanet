@@ -1,0 +1,66 @@
+<block>
+  <name>DPSK FHSS Modem</name>
+  <key>dpsk_radio</key>
+  <category>gr-fhmanet</category>
+  <import>from dpsk_radio import dpsk_radio  # grc-generated hier_block</import>
+  <make>dpsk_radio(
+    access_code_threshold=$access_code_threshold,
+    ampl=$ampl,
+    rate=$rate,
+    samps_per_sym=$samps_per_sym,
+)</make>
+  <callback>set_access_code_threshold($access_code_threshold)</callback>
+  <callback>set_ampl($ampl)</callback>
+  <callback>set_rate($rate)</callback>
+  <callback>set_samps_per_sym($samps_per_sym)</callback>
+  <param>
+    <name>Access code threshold</name>
+    <key>access_code_threshold</key>
+    <value>0</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>TX BB amp</name>
+    <key>ampl</key>
+    <value>0.7</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Sample rate</name>
+    <key>rate</key>
+    <value>1e6</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Samples/symbol</name>
+    <key>samps_per_sym</key>
+    <value>4</value>
+    <type>raw</type>
+  </param>
+  <sink>
+    <name>bb_in</name>
+    <type>complex</type>
+    <vlen>1</vlen>
+  </sink>
+  <sink>
+    <name>msg_in</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>freq_in</name>
+    <type>message</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <vlen>1</vlen>
+  </source>
+  <source>
+    <name>msg_out</name>
+    <type>message</type>
+  </source>
+  <doc>Jason Noble
+DPSK Modem based on J. Malbury's GMSK Modem from gr-mac
+/home/exadius/.grc_gnuradio/dpsk_radio.py</doc>
+  <grc_source>/home/exadius/Documents/Thesis/grc/dpsk_radio_v3.grc</grc_source>
+</block>
