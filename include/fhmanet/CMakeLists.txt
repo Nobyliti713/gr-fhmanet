@@ -21,6 +21,6 @@
 # Install public header files
 ########################################################################
 install(FILES
-    api.h
+    api.h fh_channel_message_strobe.h xorshift.h
     DESTINATION include/fhmanet
 )

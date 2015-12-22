@@ -25,6 +25,7 @@
 
 #include "api.h"
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/message_strobe.h>
 
 namespace gr {
   namespace fhmanet {
@@ -53,28 +54,28 @@ namespace gr {
       static sptr make(pmt::pmt_t msg2, float period_ms);
 
       /*!
-       * \param Number of hops before the sequence repeats.
+       * \param sequence_length Number of hops before the sequence repeats.
        */
       virtual double sequence_length() const = 0;
 
       /*!
-       * \param center frequency of the channel.
+       * \param center_freq center frequency of the channel.
        */
       virtual double center_freq() const = 0;
 
       /*!
        * Width of each channel in Hz.
-       * \param width of each channel in Hz.
+       * \param channel_widht width of each channel in Hz.
        */
       virtual float channel_width() const = 0;
 
       /*!
-       * \param the number of sub-channels in the frequency bandwidth.
+       * \param num_channels the number of sub-channels in the frequency bandwidth.
        */
       virtual int num_channels() const = 0;
 
       /*!
-       * \param the offset of the output frequency used for the 2nd output.
+       * \param freq_offset the offset of the output frequency used for the 2nd output.
        */
       virtual int freq_offset() const = 0;
     };

@@ -23,12 +23,13 @@
 #ifndef INCLUDED_FH_CHANNEL_MESSAGE_STROBE_IMPL_H
 #define INCLUDED_FH_CHANNEL_MESSAGE_STROBE_IMPL_H
 
-#include <../../lib/fh_channel_message_strobe.h>
+#include <../include/fhmanet/fh_channel_message_strobe.h>
 
 namespace gr {
   namespace fhmanet {
 
-    class FHMANET_API fh_channel_message_strobe_impl : public message_strobe
+    class FHMANET_API fh_channel_message_strobe_impl : 
+		public gr::blocks::message_strobe
     {
     private:
       /*boost::shared_ptr<boost::thread> d_thread;
@@ -59,7 +60,7 @@ namespace gr {
       void set_center_freq(double center_freq) {d_center_freq = center_freq; }
       double center_freq() const { return d_center_freq; }
       
-	  void set_channel_width(float channel_width) {d_chanel_width = channel_width; }
+	  void set_channel_width(float channel_width) {d_channel_width = channel_width; }
       float channel_width() const { return d_channel_width; }
 
 	  void set_num_channels(int num_channels) {d_num_channels = num_channels; }
