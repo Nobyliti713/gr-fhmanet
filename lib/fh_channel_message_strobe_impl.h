@@ -30,7 +30,7 @@ namespace gr {
   namespace fhmanet {
 
     class FHMANET_API fh_channel_message_strobe_impl : 
-		public gr::blocks::message_strobe
+		public fh_channel_message_strobe //gr::blocks::message_strobe
     {
     private:
       boost::shared_ptr<boost::thread> d_thread;
@@ -43,6 +43,7 @@ namespace gr {
       int d_num_channels;
       double d_sequence_length;
       int d_freq_offset;
+      double d_tx_security_key;
 	  boost::posix_time::ptime d_time;
 	  boost::posix_time::time_duration d_duration;
 	  double d_current_hop; //which hop in the sequence at the current time
@@ -51,9 +52,13 @@ namespace gr {
       void run();
 
     public:
-      fh_channel_message_strobe_impl(pmt::pmt_t msg2, double center_freq,
-			float channel_width, int num_channels, double sequence_length, 
-			int freq_offset);
+      fh_channel_message_strobe_impl(pmt::pmt_t msg2, 
+									 double center_freq,
+									 float channel_width, 
+									 int num_channels, 
+									 double sequence_length, 
+									 int freq_offset, 
+									 double tx_security_key);
       ~fh_channel_message_strobe_impl();
 
       //void set_msg(pmt::pmt_t msg) { d_msg = msg; }
@@ -76,6 +81,9 @@ namespace gr {
       
       void set_freq_offset(int freq_offset) {d_freq_offset = freq_offset; }
       int freq_offset() const { return d_freq_offset; }
+      
+      void set_tx_security_key(double tx_security_key) {d_tx_security_key = tx_security_key; }
+      double tx_security_key() const { return d_tx_security_key; }      
     };
 
   } /* namespace fhmanet */

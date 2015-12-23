@@ -45,7 +45,7 @@ namespace gr {
       uint16_t d_generated_num = 0; //output after modulus
       //short d_channel_shift; //re-centers channels at 0
       //uint16_t d_num_channels;
-      uint64_t d_seed;
+      uint64_t d_seed; //PRNG seed, should take the transmission security key
       uint64_t d_sequence_length;
 
      public:
