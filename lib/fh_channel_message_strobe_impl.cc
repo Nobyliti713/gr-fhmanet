@@ -97,12 +97,12 @@ namespace gr {
 	  //translate raw PRNG output to frequencies
 	  for( uint8_t i = 0; i < d_sequence_length; i++)
           {
-			d_xorshift.hop_sequence[i] = d_center_freq + 
+			d_hop_sequence[i] = d_center_freq + 
 				((int(d_xorshift.hop_sequence[i] % 
 				d_num_channels) - (d_num_channels / 2)) * 
 				d_channel_width);
 		  }
-		  
+	    
       //message_port_register_in(pmt::mp("set_msg"));
       //set_msg_handler(pmt::mp("set_msg"),
       //                boost::bind(&message_strobe_impl::set_msg, this, _1));
@@ -155,8 +155,8 @@ namespace gr {
 		d_current_hop = fmod(d_current_hop, d_sequence_length);
 
 		//these are the values for the PMTs	
-		d_msg = pmt::mp("freq", d_xorshift.hop_sequence[d_current_hop]);
-		d_msg2 = pmt::mp("freq", d_xorshift.hop_sequence[d_current_hop] 
+		d_msg = pmt::mp("freq", d_hop_sequence[d_current_hop]);
+		d_msg2 = pmt::mp("freq", d_hop_sequence[d_current_hop] 
 				 + d_freq_offset);
 		
 		message_port_pub(pmt::mp("freq_out"), d_msg);
