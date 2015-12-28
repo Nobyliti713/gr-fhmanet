@@ -22,7 +22,7 @@
 
 from __future__ import with_statement
 
-import sys, time, random, struct, threading
+import sys, datetime, time, random, struct, threading
 from math import pi
 import Queue
 import numpy
@@ -34,7 +34,7 @@ import gnuradio.digital as gr_digital
 from constants import *
 
 # /////////////////////////////////////////////////////////////////////////////
-#                   Simple MAC w/ ARQ
+#                   FHMANET MAC w/ ARQ, Time Sync
 # /////////////////////////////////////////////////////////////////////////////
 
 class Node():
@@ -50,8 +50,8 @@ class Node():
     def expire(self):
         self.alive = False
 
-class simple_mac(gr.basic_block):
-#class simple_mac(gr.sync_block):
+class fhmanet_mac(gr.basic_block):
+#class fhmanet_mac(gr.sync_block):
     """
     docstring for block mac
     """
@@ -156,7 +156,15 @@ class simple_mac(gr.basic_block):
     def send_bcast_pkt(self):
         self.send_pkt_radio((None, {'EM_DEST_ADDR':BROADCAST_ADDR}), 0, BROADCAST_PROTOCOL_ID, ARQ_NO_REQ)
     
-    
+    #transmit sync packet
+    def send_sync_pkt(self, pdu_tuple, pkt_cnt, protocol_id, control, allow_dummy=True):
+	   data = (datetime.now().hour * 3600000) + (datetime.now().minute 
+			   * 60000) + (datetime.now().second * 1000) + 
+			   (datetime.now().microsecond / 1000)
+	   meta_dict = {'EM_DEST_ADDR': self.addr}
+	   pdu_tuple = (data, meta_dict)
+       self.tx_no_arq(pdu_tuple, ARQ_PROTOCOL_ID) #change to "SYNC_PROTOCOL_ID"?
+	   
     #transmit ack packet
     def send_ack(self, ack_addr, ack_pkt_cnt):
        data = [ack_pkt_cnt]

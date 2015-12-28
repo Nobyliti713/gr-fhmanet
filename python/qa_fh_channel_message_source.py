@@ -32,17 +32,24 @@ class qa_fh_channel_message_strobe (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_fh_channel_message_strobe(self):
-        #this all needs to be re-written
-        src_data = (-3, 4, -5.5, 2, 3)
-        expected_result = (9, 16, 30.25, 4, 9)
-        src = blocks.vector_source_f(src_data)
-        sqr = howto.fh_channel_message_strobe()
-        dst = blocks.vector_sink_f()
-        self.tb.connect(src, sqr)
-        self.tb.connect(sqr, dst)
-        self.tb.run()
-        result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 6)
+        #need to establish control messages
+        //msg = pmt.cons(pmt.intern("freq"), pmt.from_double(d_hop_sequence[d_current_hop]))
+        //msg2 = pmt.intern("TESTING MSG2")
+        src = fhmanet.fh_channel_message_strobe(msg, 100, msg2, 1000000000,
+				25000, 100, 10000, 12500, 12345)
+		snk1 = blocks.message_debug()
+		snk2 = blocks.message_debug()
+
+		tb = gr.top_block()
+        tb.msg_connect(src, "freq_out", snk1, "store")
+        tb.msg_connect(src, "offset_freq_out", snk2, "store")
+        tb.start()
+        time.sleep(1)
+        tb.stop()
+        tb.wait()
+        rec_msg1 = snk1.get_message(0)
+        rec_msg2 = snk2.get_message(0)
+        self.assertTrue(pmt.eqv(rec_msg, msg))
 
 
 if __name__ == '__main__':
