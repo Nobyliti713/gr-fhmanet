@@ -48,11 +48,14 @@ namespace gr {
 	  boost::posix_time::time_duration d_duration;
 	  double d_current_hop; //which hop in the sequence at the current time
 	  double d_hop_index; //must be <= sequence_length
+	  xorshift d_xorshift;
 	  
       void run();
 
     public:
-      fh_channel_message_strobe_impl(pmt::pmt_t msg2, 
+      fh_channel_message_strobe_impl(pmt::pmt_t msg,
+									 float period_ms,
+									 pmt::pmt_t msg2, 
 									 double center_freq,
 									 float channel_width, 
 									 int num_channels, 
@@ -61,9 +64,12 @@ namespace gr {
 									 double tx_security_key);
       ~fh_channel_message_strobe_impl();
 
-      //void set_msg(pmt::pmt_t msg) { d_msg = msg; }
-      //pmt::pmt_t msg() const { return d_msg; }
-      
+      void set_msg(pmt::pmt_t msg) { d_msg = msg; }
+      pmt::pmt_t msg() const { return d_msg; }
+
+      void set_period(float period_ms) { d_period_ms = period_ms; }
+      float period() const { return d_period_ms; }
+            
       void set_msg2(pmt::pmt_t msg2) { d_msg2 = msg2; }
       pmt::pmt_t msg2() const { return d_msg2; }
       
@@ -83,7 +89,10 @@ namespace gr {
       int freq_offset() const { return d_freq_offset; }
       
       void set_tx_security_key(double tx_security_key) {d_tx_security_key = tx_security_key; }
-      double tx_security_key() const { return d_tx_security_key; }      
+      double tx_security_key() const { return d_tx_security_key; }
+      
+      bool start();
+      bool stop();
     };
 
   } /* namespace fhmanet */

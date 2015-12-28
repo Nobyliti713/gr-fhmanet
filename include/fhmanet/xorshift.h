@@ -53,12 +53,12 @@ namespace gr {
               {d_seed = seed; d_sequence_length = sequence_length;}
            ~xorshift();
 
-       static int checkseed(int seed);
+       //static int checkseed(int d_seed);
 
        std::vector<uint64_t> hop_sequence;
        //^the vector that stores the PRNG output
 
-       uint64_t xor_sequence()
+       std::vector<uint64_t> xor_sequence()
        {
           d_rng_state[0] = d_seed;
           d_rng_state[1] = d_seed; //consider changing this to clock time?
@@ -81,11 +81,11 @@ namespace gr {
             //d_channel_shift = int(d_generated_num) - (d_num_channels / 2);
             hop_sequence[i] = d_rng_output;
           }
-          return d_rng_output;
+          return hop_sequence;
 
         }
 
-       int seed() const {return d_seed;}
+       //int seed() const {return d_seed;}
     };
 
   } /* namespace fhmanet */

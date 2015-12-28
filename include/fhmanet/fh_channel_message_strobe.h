@@ -37,8 +37,7 @@ namespace gr {
      * Takes a PMT message and sends it out every \p period_ms
      * milliseconds. Useful for testing/debugging the message system.
      */
-    class FHMANET_API fh_channel_message_strobe : virtual public 
-		gr::blocks::message_strobe
+    class FHMANET_API fh_channel_message_strobe : virtual public block
     {
     public:
       /*!
@@ -59,22 +58,25 @@ namespace gr {
        * \param tx_security_key Transmission Security Key (TSK) is the
        * 						seed number for the PRNG.
        */
-      //static sptr make(pmt::pmt_t msg, float period_ms);
-      //virtual void set_msg(pmt::pmt_t msg) = 0;
-      //virtual pmt::pmt_t msg() const = 0;
+
       typedef boost::shared_ptr<fh_channel_message_strobe> sptr;
       
-      static sptr make(pmt::pmt_t msg2, 
+      static sptr make(pmt::pmt_t msg,
+						float period_ms,
+						pmt::pmt_t msg2,
 						double center_freq, 
 						float channel_width, 
 						int num_channels, 
 						double sequence_length, 
 						int freq_offset, 
 						double tx_security_key);
-			
-      //virtual void set_period(float period_ms) = 0;
-      //virtual float period() const = 0;
-      
+
+      virtual void set_msg(pmt::pmt_t msg) = 0;
+      virtual pmt::pmt_t msg() const = 0;
+      			
+      virtual void set_period(float period_ms) = 0;
+      virtual float period() const = 0;
+
       virtual void set_msg2(pmt::pmt_t msg2) = 0;
       virtual pmt::pmt_t msg2() const = 0;
       

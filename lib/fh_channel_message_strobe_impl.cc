@@ -40,7 +40,9 @@ namespace gr {
   namespace fhmanet {
 
     fh_channel_message_strobe::sptr
-    fh_channel_message_strobe::make(pmt::pmt_t msg2, 
+    fh_channel_message_strobe::make(pmt::pmt_t msg,
+									float period_ms,
+									pmt::pmt_t msg2, 
 									double center_freq, 
 									float channel_width, 
 									int num_channels, 
@@ -49,7 +51,9 @@ namespace gr {
 									double tx_security_key)
     {
       return gnuradio::get_initial_sptr
-        (new fh_channel_message_strobe_impl(msg2, 
+        (new fh_channel_message_strobe_impl(msg,
+											period_ms,
+											msg2,
 											center_freq, 
 											channel_width, 
 											num_channels, 
@@ -59,6 +63,8 @@ namespace gr {
     }
 
     fh_channel_message_strobe_impl::fh_channel_message_strobe_impl(
+										pmt::pmt_t msg,
+										float period_ms,
 										pmt::pmt_t msg2, 
 										double center_freq, 
 										float channel_width, 
@@ -66,7 +72,7 @@ namespace gr {
 										double sequence_length, 
 										int freq_offset, 
 										double tx_security_key)
-      : message_strobe("fh_channel_message_strobe",
+      : block("fh_channel_message_strobe",
                  io_signature::make(0, 0, 0),
                  io_signature::make(0, 0, 0)),
         d_finished(false),
@@ -87,6 +93,16 @@ namespace gr {
         
       message_port_register_out(pmt::mp("offset_freq_out"));  
 
+	  xorshift d_xorshift(d_tx_security_key, d_sequence_length);
+	  //translate raw PRNG output to frequencies
+	  for( uint8_t i = 0; i < d_sequence_length; i++)
+          {
+			d_xorshift.hop_sequence[i] = d_center_freq + 
+				((int(d_xorshift.hop_sequence[i] % 
+				d_num_channels) - (d_num_channels / 2)) * 
+				d_channel_width);
+		  }
+		  
       //message_port_register_in(pmt::mp("set_msg"));
       //set_msg_handler(pmt::mp("set_msg"),
       //                boost::bind(&message_strobe_impl::set_msg, this, _1));
@@ -97,7 +113,7 @@ namespace gr {
     }
 
     bool
-    message_strobe_impl::start()
+    fh_channel_message_strobe_impl::start()
     {
       // NOTE: d_finished should be something explicitely thread safe. But since
       // nothing breaks on concurrent access, I'll just leave it as bool.
@@ -107,21 +123,13 @@ namespace gr {
 						&fh_channel_message_strobe_impl::run, this)));
 
 	  //call the xorshift PRNG here to generate the hop sequence?
-	  xorshift(d_tx_security_key, d_sequence_length);
-
-	  //translate raw PRNG output to frequencies
-	  for( uint8_t i = 0; i < d_sequence_length; i++)
-          {
-			hop_sequence[i] = d_center_freq + ((int(hop_sequence[i] % 
-				d_num_channels) - (d_num_channels / 2)) * 
-				d_channel_width);
-		  }
+	  //need to execute the hop sequence generation here?
 	  
       return block::start();
     }
     
     bool
-    gr::blocks::message_strobe_impl::stop()
+    fh_channel_message_strobe_impl::stop()
     {
       // Shut down the thread
       d_finished = true;
@@ -140,16 +148,16 @@ namespace gr {
         }
 		//check system time to get index of the hop sequence
 		d_time = boost::posix_time::microsec_clock::local_time();
-		d_duration.total_milliseconds( d_time.time_of_day() );
+		d_duration = d_time.time_of_day(); 
 		
-		d_current_hop = d_duration.total_milliseconds( d_time.time_of_day() ) 
-			/ d_period_ms;
+		d_current_hop = d_duration.total_milliseconds()	/ d_period_ms;
 		
 		d_current_hop = fmod(d_current_hop, d_sequence_length);
 
 		//these are the values for the PMTs	
-		d_msg = pmt::mp("freq", hop_sequence[d_current_hop]);
-		d_msg2 = pmt::mp("freq", hop_sequence[d_current_hop] + d_freq_offset);
+		d_msg = pmt::mp("freq", d_xorshift.hop_sequence[d_current_hop]);
+		d_msg2 = pmt::mp("freq", d_xorshift.hop_sequence[d_current_hop] 
+				 + d_freq_offset);
 		
 		message_port_pub(pmt::mp("freq_out"), d_msg);
         message_port_pub(pmt::mp("offset_freq_out"), d_msg2);
