@@ -60,7 +60,7 @@ class fhmanet_mac(gr.basic_block):
             node_expiry_delay=10.0, expire_on_arq_failure=False, only_send_if_alive=False,
             prepend_dummy=False):
         gr.basic_block.__init__(self,
-            name="simple_mac",
+            name="fhmanet_mac",
             in_sig=None,
             out_sig=None)
         
@@ -155,15 +155,17 @@ class fhmanet_mac(gr.basic_block):
     #transmit layer 3 broadcast packet
     def send_bcast_pkt(self):
         self.send_pkt_radio((None, {'EM_DEST_ADDR':BROADCAST_ADDR}), 0, BROADCAST_PROTOCOL_ID, ARQ_NO_REQ)
+
     
     #transmit sync packet
     def send_sync_pkt(self, pdu_tuple, pkt_cnt, protocol_id, control, allow_dummy=True):
 	   data = (datetime.now().hour * 3600000) + (datetime.now().minute 
 			   * 60000) + (datetime.now().second * 1000) + 
 			   (datetime.now().microsecond / 1000)
-	   meta_dict = {'EM_DEST_ADDR': self.addr}
+	   meta_dict = {'EM_DEST_ADDR': BROADCAST_ADDR, 'EM_SRC_ID': src_addr} #metadata is broadcast pkt from src_addr
 	   pdu_tuple = (data, meta_dict)
-       self.tx_no_arq(pdu_tuple, ARQ_PROTOCOL_ID) #change to "SYNC_PROTOCOL_ID"?
+       self.tx_no_arq(pdu_tuple, SYNC_PROTOCOL_ID)
+
 	   
     #transmit ack packet
     def send_ack(self, ack_addr, ack_pkt_cnt):
@@ -207,6 +209,7 @@ class fhmanet_mac(gr.basic_block):
             return
         
         #create header, merge with payload, convert to pmt for message_pub
+        #this formatting needs to be described in your thesis
         data = [
             pkt_cnt,
             self.addr,
@@ -215,6 +218,8 @@ class fhmanet_mac(gr.basic_block):
             control
         ]
         
+        #if sending a sync packet, timestamp should be as late as possible
+        #eventually re-write to put timestamp here
         data += payload
         
         data = pmt.init_u8vector(len(data), data)
@@ -367,6 +372,23 @@ class fhmanet_mac(gr.basic_block):
                     else:
                         print "ARQ protocol packet too short"
                 
+                #insert synchronization here. Must check for sync packet, if from lower node ID, then set system clock to received time
+                if incoming_protocol_id == SYNC_PROTOCOL_ID:
+					if src_addr < self.addr: #if the origin node is ranked "higher" in the network's hierarchy
+						rx_sync_time = data[5]
+						s, ms = divmod(rx_sync_time, 1000)
+						m, s = divmod(s, 60)
+						h, m = divmod(m, 60)
+						ns = ms * 1000000
+						ns.zfill(9)
+						#if the time difference is <2ms, don't change the clock?
+						os.system('hwclock --set --date=%s:%s:%s.%s' % (h, m, s, ns) )
+						os.system('hwclock --hctosys')
+						print "Synced to packet from node: %03u" % (src_addr)
+					else:
+                        print "SYNC protocol packet from lower-ranked node"
+						
+						
                 # do something with incoming user data
                 elif incoming_protocol_id == USER_IO_PROTOCOL_ID:
                     if not discard:
