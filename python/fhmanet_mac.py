@@ -159,21 +159,21 @@ class fhmanet_mac(gr.basic_block):
     
     #transmit sync packet
     def send_sync_pkt(self, pdu_tuple, pkt_cnt, protocol_id, control, allow_dummy=True):
-	   data = (datetime.now().hour * 3600000) + (datetime.now().minute 
-			   * 60000) + (datetime.now().second * 1000) + 
-			   (datetime.now().microsecond / 1000)
-	   meta_dict = {'EM_DEST_ADDR': BROADCAST_ADDR, 'EM_SRC_ID': src_addr} #metadata is broadcast pkt from src_addr
-	   pdu_tuple = (data, meta_dict)
-       self.tx_no_arq(pdu_tuple, SYNC_PROTOCOL_ID)
+        data = (datetime.now().hour * 3600000) + (datetime.now().minute 
+			* 60000) + (datetime.now().second * 1000) + \
+			(datetime.now().microsecond / 1000)
+        meta_dict = {'EM_DEST_ADDR': BROADCAST_ADDR, 'EM_SRC_ID': src_addr} #metadata is broadcast pkt from src_addr
+        pdu_tuple = (data, meta_dict)
+        self.tx_no_arq(pdu_tuple, SYNC_PROTOCOL_ID)
 
 	   
     #transmit ack packet
     def send_ack(self, ack_addr, ack_pkt_cnt):
-       data = [ack_pkt_cnt]
-       meta_dict = {'EM_DEST_ADDR': ack_addr}
-       pdu_tuple = (data, meta_dict)
-       self.tx_no_arq(pdu_tuple, ARQ_PROTOCOL_ID)
-       if self.debug_stderr: sys.stderr.write("[%.6f] ==> Sent ACK %03d to %03d\n" % (time.time(), ack_pkt_cnt, ack_addr))
+        data = [ack_pkt_cnt]
+        meta_dict = {'EM_DEST_ADDR': ack_addr}
+        pdu_tuple = (data, meta_dict)
+        self.tx_no_arq(pdu_tuple, ARQ_PROTOCOL_ID)
+        if self.debug_stderr: sys.stderr.write("[%.6f] ==> Sent ACK %03d to %03d\n" % (time.time(), ack_pkt_cnt, ack_addr))
     
     
     #transmit data through non-arq path    
@@ -386,9 +386,9 @@ class fhmanet_mac(gr.basic_block):
 						os.system('hwclock --hctosys')
 						print "Synced to packet from node: %03u" % (src_addr)
 					else:
-                        print "SYNC protocol packet from lower-ranked node"
-						
-						
+						print "SYNC protocol packet from lower-ranked node"
+
+
                 # do something with incoming user data
                 elif incoming_protocol_id == USER_IO_PROTOCOL_ID:
                     if not discard:
