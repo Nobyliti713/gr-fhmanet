@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##FH Channel Message Strobe
+###################################################
+ -->
+<block>
+	<name>FH Message Strobe</name>
+	<key>fhmanet_fh_channel_message_strobe</key>
+	<category>gr-fhmanet</category>
+	<import>import fhmanet</import>
+	<import>from gnuradio import blocks</import>
+	<import>import pmt</import>
+	<make>fhmanet.fh_channel_message_strobe(
+		$msg, 
+		$period_ms,
+		$msg2,
+		$center_freq, 
+		$channel_width, 
+		$num_channels, 
+		$sequence_length, 
+		$freq_offset, 
+		$tx_security_key)
+	</make>
+    <callback>set_msg($msg)</callback>
+    <callback>set_period($period)</callback>
+	<!--param>
+		<name>Message PMT</name>
+		<key>msg</key>
+		<value>pmt.intern("TEST")</value>
+		<type>raw</type>
+	</param-->
+	<param>
+		<name>Period (ms)</name>
+		<key>period_ms</key>
+		<value>1000</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Center Frequency</name>
+		<key>center_freq</key>
+		<value>1000</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Channel Width</name>
+		<key>channel_width</key>
+		<value>50000</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Number of Channels</name>
+		<key>num_channels</key>
+		<value>500</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sequence Length</name>
+		<key>sequence_length</key>
+		<value>12800</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Frequency Offset</name>
+		<key>freq_offset</key>
+		<value>-25000</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Transmission Security Key</name>
+		<key>tx_security_key</key>
+		<value>12345</value>
+		<type>real</type>
+	</param>
+	<source>
+		<name>freq_out</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
+	<source>
+		<name>offset_freq_out</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
+	<doc>Uses the XORshift PRNG to generate a spread-spectrum hop sequence.
+	Checks the clock time to determine what the current hop should be, then
+	sends a PMT message pair of the frequency the signal source should 
+	generate. The 2nd (offset) message should be sent to a Xlating FIR 
+	filter block on the receiver side of the modem.
+	
+	Period: channel dwell time
+	Center Frequency: center frequency of the transmission bandwidth
+	Channel Width: bandwidth of each sub-channel in Hz
+	Number of Channels: number of sub-channels in the tx bandwidth
+	Sequence Length: Length of the PRNG sequence before it repeats. Max 
+		value is 2^64-1.
+	Frequency Offset: Hz offset value passed from second message port. 
+		Negative value for left offset, positive for right.
+	Transmission Security Key: TSK is the seed number for the XORshift PRNG.
+		Also serves as the NetID. All radios meant to operate on the same net
+		must use the same TSK.
+	</doc>	
+</block>

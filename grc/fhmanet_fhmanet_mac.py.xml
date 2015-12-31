@@ -5,17 +5,17 @@
 	<category>gr-fhmanet</category>
 	<import>import fhmanet</import>
 	<make>fhmanet.fhmanet_mac(
-$addr,
-$timeout,
-$maximum_attempts,
-$broadcast_interval,
-$exp_backoff,
-$backoff_randomness,
-node_expiry_delay=$node_expiry_delay,
-expire_on_arq_failure=$expire_on_arq_failure,
-only_send_if_alive=$only_send_if_alive,
-prepend_dummy=$prepend_dummy,
-)</make>
+		$addr,
+		$timeout,
+		$maximum_attempts,
+		$broadcast_interval,
+		$exp_backoff,
+		$backoff_randomness,
+		node_expiry_delay=$node_expiry_delay,
+		expire_on_arq_failure=$expire_on_arq_failure,
+		only_send_if_alive=$only_send_if_alive,
+		prepend_dummy=$prepend_dummy)
+	</make>
 
     <param>
         <name>Local address</name>
