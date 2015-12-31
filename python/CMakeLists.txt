@@ -31,6 +31,9 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    #dpsk_fhmanet_trx.py
+    dpsk_radio.py
+    fhmanet_mac.py
     DESTINATION ${GR_PYTHON_DIR}/fhmanet
 )
 

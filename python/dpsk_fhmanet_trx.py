@@ -4,7 +4,7 @@
 # Title: DPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Fri Dec 18 11:30:11 2015
+# Generated: Thu Dec 31 14:03:05 2015
 ##################################################
 
 import os
@@ -24,7 +24,7 @@ import pmt
 import time
 
 
-class dpsk_trx_mac(gr.top_block):
+class dpsk_fhmanet_trx(gr.top_block):
 
     def __init__(self, ampl=0.7, arq_timeout=.1*0 + 0.04, broadcast_interval=1, dest_addr=1, max_arq_attempts=5 * 2, mtu=128, port="12345", radio_addr=0, rate=1e6, samps_per_sym=4):
         gr.top_block.__init__(self, "DPSK Transceiver MAC")
@@ -237,7 +237,7 @@ if __name__ == '__main__':
     parser.add_option("", "--samps-per-sym", dest="samps_per_sym", type="intx", default=4,
         help="Set Samples/symbol [default=%default]")
     (options, args) = parser.parse_args()
-    tb = dpsk_trx_mac(ampl=options.ampl, arq_timeout=options.arq_timeout, broadcast_interval=options.broadcast_interval, dest_addr=options.dest_addr, max_arq_attempts=options.max_arq_attempts, mtu=options.mtu, port=options.port, radio_addr=options.radio_addr, rate=options.rate, samps_per_sym=options.samps_per_sym)
+    tb = dpsk_fhmanet_trx(ampl=options.ampl, arq_timeout=options.arq_timeout, broadcast_interval=options.broadcast_interval, dest_addr=options.dest_addr, max_arq_attempts=options.max_arq_attempts, mtu=options.mtu, port=options.port, radio_addr=options.radio_addr, rate=options.rate, samps_per_sym=options.samps_per_sym)
     tb.start()
     try:
         raw_input('Press Enter to quit: ')
