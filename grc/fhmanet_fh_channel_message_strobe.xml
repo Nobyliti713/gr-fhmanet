@@ -67,7 +67,7 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Transmission Security Key</name>
+		<name>Tx Security Key</name>
 		<key>tx_security_key</key>
 		<value>12345</value>
 		<type>real</type>
@@ -96,8 +96,8 @@
 		value is 2^64-1.
 	Frequency Offset: Hz offset value passed from second message port. 
 		Negative value for left offset, positive for right.
-	Transmission Security Key: TSK is the seed number for the XORshift PRNG.
-		Also serves as the NetID. All radios meant to operate on the same net
+	Tx Security Key: TSK is the seed number for the XORshift PRNG. Also 
+		serves as the NetID. All radios meant to operate on the same net
 		must use the same TSK.
 	</doc>	
 </block>
