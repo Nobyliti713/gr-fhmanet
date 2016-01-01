@@ -7,8 +7,8 @@
     access_code_threshold=$access_code_threshold,
     ampl=$ampl,
     rate=$rate,
-    samps_per_sym=$samps_per_sym,
-)</make>
+    samps_per_sym=$samps_per_sym)
+  </make>
   <callback>set_access_code_threshold($access_code_threshold)</callback>
   <callback>set_ampl($ampl)</callback>
   <callback>set_rate($rate)</callback>
@@ -50,6 +50,10 @@
     <name>freq_in</name>
     <type>message</type>
   </sink>
+  <sink>
+    <name>offset_freq_in</name>
+    <type>message</type>
+  </sink>  
   <source>
     <name>out</name>
     <type>complex</type>
@@ -62,5 +66,5 @@
   <doc>Jason Noble
 DPSK Modem based on J. Malbury's GMSK Modem from gr-mac
 /home/exadius/.grc_gnuradio/dpsk_radio.py</doc>
-  <grc_source>/home/exadius/Documents/Thesis/grc/dpsk_radio_v3.grc</grc_source>
+  <grc_source>../examples/dpsk_radio.grc</grc_source>
 </block>

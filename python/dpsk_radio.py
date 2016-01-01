@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: DPSK FHSS Modem
 # Author: Jason Noble
 # Description: DPSK Modem based on J. Malbury's GMSK Modem from gr-mac
-# Generated: Thu Dec 31 15:49:28 2015
+# Generated: Fri Jan  1 16:56:16 2016
 ##################################################
 
 from datetime import datetime
@@ -26,9 +27,10 @@ class dpsk_radio(gr.hier_block2):
             gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
             gr.io_signature(1, 1, gr.sizeof_gr_complex*1),
         )
-        self.message_port_register_hier_out("freq_in")
-        self.message_port_register_hier_out("msg_in")
-        self.message_port_register_hier_in("msg_out")
+        self.message_port_register_hier_in("freq_in")
+        self.message_port_register_hier_in("msg_in")
+        self.message_port_register_hier_in("offset_freq_in")
+        self.message_port_register_hier_out("msg_out")
 
         ##################################################
         # Parameters
@@ -111,6 +113,7 @@ class dpsk_radio(gr.hier_block2):
         self.msg_connect((self.mac_packet_to_pdu_0, 'pdu'), (self, 'msg_out'))    
         self.msg_connect((self, 'freq_in'), (self.freq_xlating_fir_filter_xxx_0_0, 'freq'))    
         self.msg_connect((self, 'msg_in'), (self.mac_packet_framer_0, 'in'))    
+        self.msg_connect((self, 'offset_freq_in'), (self.analog_sig_source_x_0, 'freq'))    
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))    
         self.connect((self.blks2_selector_0, 0), (self.digital_psk_demod_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_multiply_xx_0, 0))    
@@ -125,7 +128,6 @@ class dpsk_radio(gr.hier_block2):
         self.connect((self.freq_xlating_fir_filter_xxx_0_0, 0), (self.blks2_selector_0, 1))    
         self.connect((self.mac_burst_tagger_0, 0), (self, 0))    
         self.connect((self, 0), (self.digital_pfb_clock_sync_xxx_0, 0))    
-
 
     def get_access_code_threshold(self):
         return self.access_code_threshold
@@ -203,4 +205,3 @@ class dpsk_radio(gr.hier_block2):
 
     def set_excess_bw(self, excess_bw):
         self.excess_bw = excess_bw
-

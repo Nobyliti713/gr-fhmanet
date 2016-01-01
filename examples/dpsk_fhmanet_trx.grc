@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.8'?>
+<?grc format='1' created='3.7.10'?>
 <flow_graph>
   <timestamp>Sat Sep 13 00:06:12 2014</timestamp>
   <block>
@@ -41,6 +41,10 @@
       <value>no_gui</value>
     </param>
     <param>
+      <key>hier_block_src_path</key>
+      <value>.:</value>
+    </param>
+    <param>
       <key>id</key>
       <value>dpsk_fhmanet_trx</value>
     </param>
@@ -49,8 +53,16 @@
       <value>0</value>
     </param>
     <param>
+      <key>qt_qss_theme</key>
+      <value></value>
+    </param>
+    <param>
       <key>realtime_scheduling</key>
       <value></value>
+    </param>
+    <param>
+      <key>run_command</key>
+      <value>{python} -u {filename}</value>
     </param>
     <param>
       <key>run_options</key>
@@ -338,7 +350,7 @@ and channel parameters</value>
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -3355,7 +3367,7 @@ and channel parameters</value>
     </param>
     <param>
       <key>args</key>
-      <value>bladerf=0,loopback=rf_lna2</value>
+      <value>bladerf=0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -3673,6 +3685,12 @@ and channel parameters</value>
     <sink_block_id>dpsk_radio_0</sink_block_id>
     <source_key>freq_out</source_key>
     <sink_key>freq_in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fhmanet_fh_channel_message_strobe_0</source_block_id>
+    <sink_block_id>dpsk_radio_0</sink_block_id>
+    <source_key>offset_freq_out</source_key>
+    <sink_key>offset_freq_in</sink_key>
   </connection>
   <connection>
     <source_block_id>fhmanet_mac_0</source_block_id>
