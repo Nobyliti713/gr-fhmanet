@@ -30,7 +30,7 @@ from gnuradio import gr
 import pmt
 from gnuradio.digital import packet_utils
 import gnuradio.digital as gr_digital
-
+import fhmanet
 from constants import *
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -68,6 +68,7 @@ class fhmanet_mac(gr.basic_block):
         self.debug_stderr = False
         
         self.addr = addr                                #MAC's address
+        self.sync_rank = addr							#time sync heirarchy is address-based
         
         self.pkt_cnt_arq = 0                            #pkt_cnt for arq channel
         self.pkt_cnt_no_arq = 0                            #pkt_cnt for non_arq channel
@@ -95,6 +96,12 @@ class fhmanet_mac(gr.basic_block):
         
         self.last_tx_time = None
         self.broadcast_interval = broadcast_interval
+        
+        self.sync_state = INIT
+        self.sync_tx_interval = sync_tx_interval #150000 / hop_rate or 120?
+        self.sync_rx_timeout = sync_timeout #120
+        self.last_sync_time = None
+        
         self.nodes = {}
         self.node_expiry_delay = node_expiry_delay
         self.expire_on_arq_failure = expire_on_arq_failure
@@ -114,10 +121,10 @@ class fhmanet_mac(gr.basic_block):
         
         try:
             self.message_port_register_in(pmt.intern('from_app_arq'), True)
-            print "Simple MAC ARQ in blocking mode"
+            print "FHMANET MAC ARQ in blocking mode"
         except:
         #if True:
-            print "Simple MAC ARQ in non-blocking mode"
+            print "FHMANET MAC ARQ in non-blocking mode"
             self.message_port_register_in(pmt.intern('from_app_arq'))
             self.set_msg_handler(pmt.intern('from_app_arq'), self.app_rx_arq)
         
@@ -151,18 +158,49 @@ class fhmanet_mac(gr.basic_block):
         #sys.stderr.write("[w-]");sys.stderr.flush();
         return 0
     
-    
+    def sync_fsm(self):
+       if self.sync_state == INIT:
+			#select a sub-channel at random from the hop_sequence!!
+			#rnd_sync_listen_channel = random.randint(0, sequence_length)	
+				#how? doesn't have access to xorshift/hop_sequence, which is internal to the FH message strobe block?
+				#implement later, currently set to center_freq
+
+			#set modem selector block to single channel
+			if dpsk_radio.blk2_selector_0.input_index != 0:
+				dpsk_radio.blk2_selector_0.input_index = 0
+			#set single-channel FXFF center frequency to selected sub-channel
+			#dpsk_radio.rnd_sync_listen_channel = hop_sequence[rnd_sync_listen_channel]
+			#INIT SYNC times out
+			if (time.time() - self.last_sync_time) >= self.sync_rx_timeout:
+				print "Sync timed out after: %03d" % (self.sync_rx_timeout)
+			#self.send_sync_pkt() needs to broadcast sync on all channels
+				#broadcast sync packets to every channel
+					#work through the hop_sequence from 0-sequence_length?			
+			self.sync_state = SYNCED
+			#set modem selector block to FH
+			if dpsk_radio.blk2_selector_0.input_index != 1:
+				dpsk_radio.blk2_selector_0.input_index = 1
+											          
+       #if sync_state = SYNCED
+       if self.sync_state == SYNCED and ((time.time() - self.last_sync_time) >= self.sync_tx_interval):
+			self.send_sync_pkt()
+
+       if self.sync_state == SYNCED and ((time.time() - self.last_sync_time) >= self.sync_rx_timeout):
+			self.sync_state = INIT
+
+			
     #transmit layer 3 broadcast packet
     def send_bcast_pkt(self):
         self.send_pkt_radio((None, {'EM_DEST_ADDR':BROADCAST_ADDR}), 0, BROADCAST_PROTOCOL_ID, ARQ_NO_REQ)
 
+	#tx
     
     #transmit sync packet
     def send_sync_pkt(self, pdu_tuple, pkt_cnt, protocol_id, control, allow_dummy=True):
         data = (datetime.now().hour * 3600000) + (datetime.now().minute 
 			* 60000) + (datetime.now().second * 1000) + \
 			(datetime.now().microsecond / 1000)
-        meta_dict = {'EM_DEST_ADDR': BROADCAST_ADDR, 'EM_SRC_ID': src_addr} #metadata is broadcast pkt from src_addr
+        meta_dict = {'EM_DEST_ADDR': BROADCAST_ADDR, 'EM_SRC_ID': self.sync_rank} #metadata is broadcast pkt from src_addr
         pdu_tuple = (data, meta_dict)
         self.tx_no_arq(pdu_tuple, SYNC_PROTOCOL_ID)
 
@@ -372,9 +410,9 @@ class fhmanet_mac(gr.basic_block):
                     else:
                         print "ARQ protocol packet too short"
                 
-                #insert synchronization here. Must check for sync packet, if from lower node ID, then set system clock to received time
-                if incoming_protocol_id == SYNC_PROTOCOL_ID:
-					if src_addr < self.addr: #if the origin node is ranked "higher" in the network's hierarchy
+                #synchronization here. checks for sync packet from lower node ID, then sets system clock to received time
+                if self.sync_state == INIT and incoming_protocol_id == SYNC_PROTOCOL_ID:
+					if src_addr < self.sync_rank: #if the origin node is ranked "higher" in the network's hierarchy
 						rx_sync_time = data[5]
 						s, ms = divmod(rx_sync_time, 1000)
 						m, s = divmod(s, 60)
@@ -384,10 +422,24 @@ class fhmanet_mac(gr.basic_block):
 						#if the time difference is <2ms, don't change the clock?
 						os.system('hwclock --set --date=%s:%s:%s.%s' % (h, m, s, ns) )
 						os.system('hwclock --hctosys')
+						#reset sync_timer
+						self.last_sync_time = rx_sync_time
+						#updates sync_rank with src_addr, also means future sync packets issued from this node have rank of higher node
+						self.sync_rank = src_addr
 						print "Synced to packet from node: %03u" % (src_addr)
+						self.sync_state = SYNCED
+						if dpsk_radio.blk2_selector_0.input_index != 1:
+							dpsk_radio.blk2_selector_0.input_index = 1						
 					else:
 						print "SYNC protocol packet from lower-ranked node"
+						#tell the sync_timer to reset, because the packet confirms good sync
+						self.last_sync_time = data[5]
+						self.sync_state = SYNCED
+						if dpsk_radio.blk2_selector_0.input_index != 1:
+							dpsk_radio.blk2_selector_0.input_index = 1
 
+                #if self.sync_state == SYNCED and incoming_protocol_id == SYNC_PROTOCOL_ID:						
+					#do nothing?
 
                 # do something with incoming user data
                 elif incoming_protocol_id == USER_IO_PROTOCOL_ID:
@@ -481,13 +533,15 @@ class fhmanet_mac(gr.basic_block):
     def ctrl_rx(self,msg):
         #sys.stderr.write("[c+]");sys.stderr.flush();
         with self.lock:
-        #    sys.stderr.write("[c]");sys.stderr.flush();
-            if (self.broadcast_interval > 0) and (self.last_tx_time is None or (time.time() - self.last_tx_time) >= self.broadcast_interval):
-                self.send_bcast_pkt()
-            
-            self.run_arq_fsm()
-            
-            self.check_nodes()
+			#sys.stderr.write("[c]");sys.stderr.flush();
+			if (self.broadcast_interval > 0) and (self.last_tx_time is None or (time.time() - self.last_tx_time) >= self.broadcast_interval):
+				self.send_bcast_pkt()
+				
+			self.sync_fsm()
+			
+			self.run_arq_fsm()
+
+			self.check_nodes()
         #sys.stderr.write("[c-]");sys.stderr.flush();
     
     

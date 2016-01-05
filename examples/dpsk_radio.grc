@@ -89,6 +89,33 @@
     </param>
     <param>
       <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(296, 147)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>center_freq</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
@@ -197,7 +224,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -384,7 +411,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(880, 587)</value>
+      <value>(736, 699)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -393,6 +420,70 @@
     <param>
       <key>id</key>
       <value>analog_sig_source_x_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>waveform</key>
+      <value>analog.GR_COS_WAVE</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_sig_source_x</key>
+    <param>
+      <key>amp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value>INIT State Single Channel Broadcast
+currently center_freq</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>center_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(736, 843)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>analog_sig_source_x_0_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -483,6 +574,69 @@
     </param>
   </block>
   <block>
+    <key>blks2_selector</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(928, 761)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blks2_selector_1</value>
+    </param>
+    <param>
+      <key>input_index</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>num_outputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>output_index</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_multiply_const_vxx</key>
     <param>
       <key>alias</key>
@@ -506,7 +660,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(888, 531)</value>
+      <value>(888, 619)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -553,7 +707,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1080, 553)</value>
+      <value>(1080, 641)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -604,7 +758,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 531)</value>
+      <value>(440, 619)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -860,7 +1014,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 499)</value>
+      <value>(632, 587)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -907,11 +1061,12 @@
     </param>
     <param>
       <key>center_freq</key>
-      <value>rnd_sync_listen_channel</value>
+      <value>center_freq</value>
     </param>
     <param>
       <key>comment</key>
-      <value>INIT STATE Single Channel Listen</value>
+      <value>INIT STATE Single Channel Listen
+currently center_freq</value>
     </param>
     <param>
       <key>affinity</key>
@@ -1174,7 +1329,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(240, 491)</value>
+      <value>(240, 579)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1475,7 +1630,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(80, 531)</value>
+      <value>(80, 619)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1518,7 +1673,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 635)</value>
+      <value>(464, 747)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1637,7 +1792,13 @@
   </block>
   <connection>
     <source_block_id>analog_sig_source_x_0</source_block_id>
-    <sink_block_id>blocks_multiply_xx_0</sink_block_id>
+    <sink_block_id>blks2_selector_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_sig_source_x_0_0</source_block_id>
+    <sink_block_id>blks2_selector_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -1646,6 +1807,12 @@
     <sink_block_id>digital_psk_demod_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blks2_selector_1</source_block_id>
+    <sink_block_id>blocks_multiply_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
