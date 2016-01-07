@@ -132,7 +132,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.35</value>
+      <value>0.2</value>
     </param>
   </block>
   <block>
@@ -774,7 +774,7 @@
     </param>
     <param>
       <key>taps</key>
-      <value></value>
+      <value>firdes_tap</value>
     </param>
     <param>
       <key>type</key>
