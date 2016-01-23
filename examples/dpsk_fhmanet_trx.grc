@@ -672,6 +672,73 @@ and channel parameters</value>
     </param>
   </block>
   <block>
+    <key>fhmanet_fh_channel_message_strobe</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>center_freq</key>
+      <value>center_freq</value>
+    </param>
+    <param>
+      <key>channel_width</key>
+      <value>channel_width</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>- (channel_width / 2)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(520, 355)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>fh_channel_message_strobe_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_channels</key>
+      <value>500</value>
+    </param>
+    <param>
+      <key>period_ms</key>
+      <value>1000 / hop_rate</value>
+    </param>
+    <param>
+      <key>sequence_length</key>
+      <value>12800</value>
+    </param>
+    <param>
+      <key>tx_security_key</key>
+      <value>12345</value>
+    </param>
+  </block>
+  <block>
     <key>parameter</key>
     <param>
       <key>alias</key>
@@ -712,73 +779,6 @@ and channel parameters</value>
     <param>
       <key>value</key>
       <value>10</value>
-    </param>
-  </block>
-  <block>
-    <key>fhmanet_fh_channel_message_strobe</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>center_freq</key>
-      <value>center_freq</value>
-    </param>
-    <param>
-      <key>channel_width</key>
-      <value>channel_width</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>freq_offset</key>
-      <value>- (channel_width / 2)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(520, 355)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>fhmanet_fh_channel_message_strobe_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>num_channels</key>
-      <value>500</value>
-    </param>
-    <param>
-      <key>period_ms</key>
-      <value>1000 / hop_rate</value>
-    </param>
-    <param>
-      <key>sequence_length</key>
-      <value>12800</value>
-    </param>
-    <param>
-      <key>tx_security_key</key>
-      <value>12345</value>
     </param>
   </block>
   <block>
@@ -3604,7 +3604,7 @@ and channel parameters</value>
     </param>
     <param>
       <key>value</key>
-      <value>1e6</value>
+      <value>3e6</value>
     </param>
   </block>
   <block>
@@ -3681,13 +3681,13 @@ and channel parameters</value>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>fhmanet_fh_channel_message_strobe_0</source_block_id>
+    <source_block_id>fh_channel_message_strobe_0</source_block_id>
     <sink_block_id>dpsk_radio_0</sink_block_id>
     <source_key>freq_out</source_key>
     <sink_key>freq_in</sink_key>
   </connection>
   <connection>
-    <source_block_id>fhmanet_fh_channel_message_strobe_0</source_block_id>
+    <source_block_id>fh_channel_message_strobe_0</source_block_id>
     <sink_block_id>dpsk_radio_0</sink_block_id>
     <source_key>offset_freq_out</source_key>
     <sink_key>offset_freq_in</sink_key>

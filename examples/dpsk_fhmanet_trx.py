@@ -5,7 +5,7 @@
 # Title: DPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Fri Jan  1 17:19:17 2016
+# Generated: Wed Jan  6 06:07:27 2016
 ##################################################
 
 import os
@@ -98,7 +98,7 @@ class dpsk_fhmanet_trx(gr.top_block):
         		only_send_if_alive=False,
         		prepend_dummy=False)
         	
-        self.fhmanet_fh_channel_message_strobe_0 = Template error: fhmanet.fh_channel_message_strobe(
+        self.fh_channel_message_strobe_0 = Template error: fhmanet.fh_channel_message_strobe(
         		$msg, 
         		$period_ms,
         		$msg2,
@@ -125,8 +125,8 @@ class dpsk_fhmanet_trx(gr.top_block):
         self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.fhmanet_mac_0, 'ctrl_in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.mac_virtual_channel_encoder_0, 'in'))    
         self.msg_connect((self.dpsk_radio_0, 'msg_out'), (self.fhmanet_mac_0, 'from_radio'))    
-        self.msg_connect((self.fhmanet_fh_channel_message_strobe_0, 'freq_out'), (self.dpsk_radio_0, 'freq_in'))    
-        self.msg_connect((self.fhmanet_fh_channel_message_strobe_0, 'offset_freq_out'), (self.dpsk_radio_0, 'offset_freq_in'))    
+        self.msg_connect((self.fh_channel_message_strobe_0, 'freq_out'), (self.dpsk_radio_0, 'freq_in'))    
+        self.msg_connect((self.fh_channel_message_strobe_0, 'offset_freq_out'), (self.dpsk_radio_0, 'offset_freq_in'))    
         self.msg_connect((self.fhmanet_mac_0, 'to_radio'), (self.dpsk_radio_0, 'msg_in'))    
         self.msg_connect((self.fhmanet_mac_0, 'to_app'), (self.mac_virtual_channel_decoder_0, 'in'))    
         self.msg_connect((self.mac_virtual_channel_decoder_0, 'out0'), (self.blocks_socket_pdu_0, 'pdus'))    
@@ -216,8 +216,8 @@ class dpsk_fhmanet_trx(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
         self.dpsk_radio_0.set_rate(self.samp_rate)
+        self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
         self.osmosdr_source_0.set_sample_rate(self.samp_rate)
 
     def get_hop_rate(self):

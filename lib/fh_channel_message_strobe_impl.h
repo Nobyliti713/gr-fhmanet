@@ -37,7 +37,6 @@ namespace gr {
       bool d_finished;
       float d_period_ms;
       pmt::pmt_t d_msg;
-      pmt::pmt_t d_msg2;
       double d_center_freq;
       float d_channel_width;
       int d_num_channels;
@@ -55,7 +54,6 @@ namespace gr {
     public:
       fh_channel_message_strobe_impl(pmt::pmt_t msg,
 									 float period_ms,
-									 pmt::pmt_t msg2, 
 									 double center_freq,
 									 float channel_width, 
 									 int num_channels, 
@@ -69,9 +67,6 @@ namespace gr {
 
       void set_period(float period_ms) { d_period_ms = period_ms; }
       float period() const { return d_period_ms; }
-            
-      void set_msg2(pmt::pmt_t msg2) { d_msg2 = msg2; }
-      pmt::pmt_t msg2() const { return d_msg2; }
       
       void set_center_freq(double center_freq) {d_center_freq = center_freq; }
       double center_freq() const { return d_center_freq; }

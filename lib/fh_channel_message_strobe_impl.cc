@@ -42,7 +42,6 @@ namespace gr {
     fh_channel_message_strobe::sptr
     fh_channel_message_strobe::make(pmt::pmt_t msg,
 									float period_ms,
-									pmt::pmt_t msg2, 
 									double center_freq, 
 									float channel_width, 
 									int num_channels, 
@@ -53,7 +52,6 @@ namespace gr {
       return gnuradio::get_initial_sptr
         (new fh_channel_message_strobe_impl(msg,
 											period_ms,
-											msg2,
 											center_freq, 
 											channel_width, 
 											num_channels, 
@@ -65,7 +63,6 @@ namespace gr {
     fh_channel_message_strobe_impl::fh_channel_message_strobe_impl(
 										pmt::pmt_t msg,
 										float period_ms,
-										pmt::pmt_t msg2, 
 										double center_freq, 
 										float channel_width, 
 										int num_channels, 
@@ -77,7 +74,6 @@ namespace gr {
                  io_signature::make(0, 0, 0)),
         d_finished(false),
         d_msg(msg),
-        d_msg2(msg2),
         d_period_ms(period_ms),
         d_center_freq(center_freq),
         d_channel_width(channel_width),
@@ -91,8 +87,6 @@ namespace gr {
         (new boost::thread(boost::bind(
 						&fh_channel_message_strobe_impl::run, this)));
         
-      message_port_register_out(pmt::mp("offset_freq_out"));  
-
 	  xorshift d_xorshift(d_tx_security_key, d_sequence_length);
 	  //translate raw PRNG output to frequencies
 	  for( uint8_t i = 0; i < d_sequence_length; i++)
@@ -156,11 +150,8 @@ namespace gr {
 
 		//these are the values for the PMTs	
 		d_msg = pmt::mp("freq", d_hop_sequence[d_current_hop]);
-		d_msg2 = pmt::mp("freq", d_hop_sequence[d_current_hop] 
-				 + d_freq_offset);
 		
 		message_port_pub(pmt::mp("freq_out"), d_msg);
-        message_port_pub(pmt::mp("offset_freq_out"), d_msg2);
       }
     }
 

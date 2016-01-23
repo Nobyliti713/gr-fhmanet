@@ -63,7 +63,6 @@ namespace gr {
       
       static sptr make(pmt::pmt_t msg,
 						float period_ms,
-						pmt::pmt_t msg2,
 						double center_freq, 
 						float channel_width, 
 						int num_channels, 
@@ -76,9 +75,6 @@ namespace gr {
       			
       virtual void set_period(float period_ms) = 0;
       virtual float period() const = 0;
-
-      virtual void set_msg2(pmt::pmt_t msg2) = 0;
-      virtual pmt::pmt_t msg2() const = 0;
       
       virtual void set_center_freq(double center_freq) = 0;
       virtual double center_freq() const = 0;
