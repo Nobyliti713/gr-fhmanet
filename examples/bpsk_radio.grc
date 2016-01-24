@@ -140,7 +140,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(736, 83)</value>
+      <value>(664, 75)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -167,7 +167,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 11)</value>
+      <value>(704, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -194,7 +194,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(456, 11)</value>
+      <value>(360, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -221,34 +221,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(360, 11)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(616, 11)</value>
+      <value>(520, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -275,7 +248,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 11)</value>
+      <value>(592, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -302,7 +275,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 11)</value>
+      <value>(800, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -352,7 +325,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -387,7 +360,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(456, 83)</value>
+      <value>(496, 75)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1206,49 +1179,6 @@ currently center_freq</value>
     </param>
   </block>
   <block>
-    <key>parameter</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(624, 75)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>filename</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Filename</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value>f</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>input.bin</value>
-    </param>
-  </block>
-  <block>
     <key>freq_xlating_fir_filter_xxx</key>
     <param>
       <key>alias</key>
@@ -1910,6 +1840,49 @@ currently center_freq</value>
     <param>
       <key>type</key>
       <value>ccc</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(360, 75)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Samples/symbol</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value>s</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>intx</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>8</value>
     </param>
   </block>
   <connection>
