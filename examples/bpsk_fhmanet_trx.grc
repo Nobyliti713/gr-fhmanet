@@ -201,7 +201,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -291,7 +291,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -436,7 +436,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(904, 337)</value>
+      <value>(904, 361)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -589,18 +589,18 @@
     </param>
   </block>
   <block>
-    <key>fhmanet_fh_channel_message_strobe</key>
+    <key>fh_channel_message_strobe</key>
     <param>
       <key>alias</key>
       <value></value>
     </param>
     <param>
       <key>center_freq</key>
-      <value>center_freq</value>
+      <value>1000</value>
     </param>
     <param>
       <key>channel_width</key>
-      <value>channel_width</value>
+      <value>50000</value>
     </param>
     <param>
       <key>comment</key>
@@ -616,7 +616,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(520, 323)</value>
+      <value>(544, 347)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -640,7 +640,7 @@
     </param>
     <param>
       <key>period_ms</key>
-      <value>1000 / hop_rate</value>
+      <value>1000</value>
     </param>
     <param>
       <key>sequence_length</key>
@@ -683,7 +683,7 @@
     </param>
     <param>
       <key>short_id</key>
-      <value>h</value>
+      <value>r</value>
     </param>
     <param>
       <key>type</key>
@@ -691,7 +691,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>10</value>
+      <value>5</value>
     </param>
   </block>
   <block>
@@ -771,6 +771,14 @@
     <param>
       <key>prepend_dummy</key>
       <value>False</value>
+    </param>
+    <param>
+      <key>sync_timeout</key>
+      <value>120</value>
+    </param>
+    <param>
+      <key>sync_tx_interval</key>
+      <value>120</value>
     </param>
   </block>
   <block>
@@ -3509,7 +3517,7 @@
     </param>
     <param>
       <key>short_id</key>
-      <value>r</value>
+      <value>s</value>
     </param>
     <param>
       <key>type</key>

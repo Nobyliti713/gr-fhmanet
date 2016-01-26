@@ -6,23 +6,25 @@
  -->
 <block>
 	<name>FH Message Strobe</name>
-	<key>fhmanet_fh_channel_message_strobe</key>
+	<key>fh_channel_message_strobe</key>
 	<category>gr-fhmanet</category>
 	<import>import fhmanet</import>
 	<import>from gnuradio import blocks</import>
 	<import>import pmt</import>
 	<make>fhmanet.fh_channel_message_strobe(
-		$msg, 
 		$period_ms,
 		$center_freq, 
 		$channel_width, 
 		$num_channels, 
 		$sequence_length, 
-		$freq_offset, 
 		$tx_security_key)
 	</make>
-    <callback>set_msg($msg)</callback>
     <callback>set_period($period)</callback>
+    <callback>set_center_freq($center_freq)</callback>
+    <callback>set_channel_width($channel_width)</callback>
+    <callback>set_num_channels($num_channels)</callback>
+    <callback>set_sequence_length($sequence_length)</callback>
+    <callback>set_tx_security_key($tx_security_key)</callback>
 	<!--param>
 		<name>Message PMT</name>
 		<key>msg</key>
@@ -73,8 +75,7 @@
 	<doc>Uses the XORshift PRNG to generate a spread-spectrum hop sequence.
 	Checks the clock time to determine what the current hop should be, then
 	sends a PMT message pair of the frequency the signal source should 
-	generate. The 2nd (offset) message should be sent to a Xlating FIR 
-	filter block on the receiver side of the modem.
+	generate.
 	
 	Period: channel dwell time
 	Center Frequency: center frequency of the transmission bandwidth

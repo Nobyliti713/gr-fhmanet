@@ -40,46 +40,39 @@ namespace gr {
   namespace fhmanet {
 
     fh_channel_message_strobe::sptr
-    fh_channel_message_strobe::make(pmt::pmt_t msg,
-									float period_ms,
+    fh_channel_message_strobe::make(float period_ms,
 									double center_freq, 
 									float channel_width, 
 									int num_channels, 
 									double sequence_length, 
-									int freq_offset, 
 									double tx_security_key)
     {
       return gnuradio::get_initial_sptr
-        (new fh_channel_message_strobe_impl(msg,
-											period_ms,
+        (new fh_channel_message_strobe_impl(period_ms,
 											center_freq, 
 											channel_width, 
 											num_channels, 
 											sequence_length, 
-											freq_offset, 
 											tx_security_key));
     }
 
     fh_channel_message_strobe_impl::fh_channel_message_strobe_impl(
-										pmt::pmt_t msg,
 										float period_ms,
 										double center_freq, 
 										float channel_width, 
 										int num_channels, 
 										double sequence_length, 
-										int freq_offset, 
 										double tx_security_key)
       : block("fh_channel_message_strobe",
                  io_signature::make(0, 0, 0),
                  io_signature::make(0, 0, 0)),
         d_finished(false),
-        d_msg(msg),
+        d_msg(0),
         d_period_ms(period_ms),
         d_center_freq(center_freq),
         d_channel_width(channel_width),
         d_num_channels(num_channels),
         d_sequence_length(sequence_length),
-        d_freq_offset(freq_offset),
         d_tx_security_key(tx_security_key)
     {
       message_port_register_out(pmt::mp("freq_out"));
@@ -87,12 +80,14 @@ namespace gr {
         (new boost::thread(boost::bind(
 						&fh_channel_message_strobe_impl::run, this)));
         
-	  xorshift d_xorshift(d_tx_security_key, d_sequence_length);
+	  d_xorshift = new xorshift(d_tx_security_key, d_sequence_length);
+	  d_xorshift->xor_sequence(d_hop_sequence);
+	  
 	  //translate raw PRNG output to frequencies
 	  for( uint8_t i = 0; i < d_sequence_length; i++)
           {
 			d_hop_sequence[i] = d_center_freq + 
-				((int(d_xorshift.hop_sequence[i] % 
+				((int(d_hop_sequence[i] % 
 				d_num_channels) - (d_num_channels / 2)) * 
 				d_channel_width);
 		  }
@@ -104,6 +99,7 @@ namespace gr {
 
     fh_channel_message_strobe_impl::~fh_channel_message_strobe_impl()
     {
+		delete d_xorshift;
     }
 
     bool

@@ -31,4 +31,4 @@ except ImportError:
 	pass
 
 # import any pure python here
-#
+from fhmanet_mac import fhmanet_mac

@@ -8,6 +8,11 @@
 %include "fhmanet_swig_doc.i"
 
 %{
+#include "fhmanet/fh_channel_message_strobe.h"
+#include "fhmanet/xorshift.h"
 %}
 
+%include "fhmanet/fh_channel_message_strobe.h"
+%include "fhmanet/xorshift.h"
 
+GR_SWIG_BLOCK_MAGIC2(fhmanet, fh_channel_message_strobe);

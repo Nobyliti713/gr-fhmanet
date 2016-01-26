@@ -42,7 +42,7 @@ namespace gr {
      private:
       uint64_t d_rng_state[2]; //initial xorshift values
       uint64_t d_rng_output = 0; //raw xorshift output
-      uint16_t d_generated_num = 0; //output after modulus
+      //uint16_t d_generated_num = 0; //output after modulus
       //short d_channel_shift; //re-centers channels at 0
       //uint16_t d_num_channels;
       uint64_t d_seed; //PRNG seed, should take the transmission security key
@@ -58,8 +58,10 @@ namespace gr {
        std::vector<uint64_t> hop_sequence;
        //^the vector that stores the PRNG output
 
-       std::vector<uint64_t> xor_sequence()
+       std::vector<uint64_t> xor_sequence(std::vector<uint64_t> &hop_sequence)
        {
+		  //std::vector<uint64_t> hop_sequence;
+		   
           d_rng_state[0] = d_seed;
           d_rng_state[1] = d_seed; //consider changing this to clock time?
 
@@ -81,8 +83,8 @@ namespace gr {
             //d_channel_shift = int(d_generated_num) - (d_num_channels / 2);
             hop_sequence[i] = d_rng_output;
           }
+          
           return hop_sequence;
-
         }
 
        //int seed() const {return d_seed;}

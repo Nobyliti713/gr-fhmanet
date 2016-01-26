@@ -9,12 +9,14 @@
 		$timeout,
 		$maximum_attempts,
 		$broadcast_interval,
+		$sync_tx_interval,
+		$sync_timeout,
 		$exp_backoff,
 		$backoff_randomness,
-		node_expiry_delay=$node_expiry_delay,
-		expire_on_arq_failure=$expire_on_arq_failure,
-		only_send_if_alive=$only_send_if_alive,
-		prepend_dummy=$prepend_dummy)
+		$node_expiry_delay,
+		$expire_on_arq_failure,
+		$only_send_if_alive,
+		$prepend_dummy)
 	</make>
 
     <param>
@@ -40,6 +42,18 @@
 		<value>2.0</value>
         <type>real</type>
     </param>
+	<param>
+        <name>Sync Tx interval</name>
+        <key>sync_tx_interval</key>
+		<value>120</value>
+        <type>real</type>
+    </param>
+	<param>
+        <name>Sync Timeout</name>
+        <key>sync_timeout</key>
+		<value>120</value>
+        <type>real</type>
+    </param>        
 	<param>
 		<name>Backoff</name>
 		<key>exp_backoff</key>
@@ -151,8 +165,12 @@
     <optional>1</optional>
   </source>
 
-	<doc>Local address can be 0-254
-ARQ timeout and  Node expiry delay in seconds
-Backoff randomness adds to current backoff delay *up to* given percentage
-	</doc>	
+  <doc>Local address: int in range [0, 254). This is the radio's ID.
+	Sync Tx Interval: time interval in seconds at which sync packets are
+					broadcast.
+	Sync Timeout: time interval in seconds after which the radio is 
+					considered unsynchronized.
+	ARQ timeout and  Node expiry delay in seconds
+	Backoff randomness adds to current backoff delay *up to* given percentage
+  </doc>	
 </block>

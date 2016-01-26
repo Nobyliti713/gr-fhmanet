@@ -24,7 +24,7 @@
 #define INCLUDED_FH_CHANNEL_MESSAGE_STROBE_H
 
 #include "api.h"
-#include <gnuradio/blocks/message_strobe.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace fhmanet {
@@ -61,18 +61,13 @@ namespace gr {
 
       typedef boost::shared_ptr<fh_channel_message_strobe> sptr;
       
-      static sptr make(pmt::pmt_t msg,
-						float period_ms,
+      static sptr make(float period_ms,
 						double center_freq, 
 						float channel_width, 
 						int num_channels, 
 						double sequence_length, 
-						int freq_offset, 
 						double tx_security_key);
 
-      virtual void set_msg(pmt::pmt_t msg) = 0;
-      virtual pmt::pmt_t msg() const = 0;
-      			
       virtual void set_period(float period_ms) = 0;
       virtual float period() const = 0;
       
@@ -87,9 +82,6 @@ namespace gr {
 
       virtual void set_sequence_length(double sequence_length) = 0; 
       virtual double sequence_length() const = 0;
-      
-      virtual void set_freq_offset(int freq_offset) = 0;
-      virtual int freq_offset() const = 0;
       
       virtual void set_tx_security_key(double tx_security_key) = 0; 
       virtual double tx_security_key() const = 0;

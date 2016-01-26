@@ -5,7 +5,7 @@
 # Title: BPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Sat Jan 23 21:42:44 2016
+# Generated: Mon Jan 25 19:30:42 2016
 ##################################################
 
 import os
@@ -28,15 +28,15 @@ import time
 
 class bpsk_fhmanet_trx(gr.top_block):
 
-    def __init__(self, ampl=0.7, arq_timeout=.1*0 + 0.04, broadcast_interval=1, dest_addr=1, fh_rate=10, max_arq_attempts=5 * 2, mtu=128, port="12345", radio_addr=0, rate=3e6, samps_per_sym=4, cen_freq=914500000):
+    def __init__(self, arq_timeout=.1*0 + 0.04, broadcast_interval=1, cen_freq=914500000, dest_addr=1, fh_rate=5, max_arq_attempts=5 * 2, mtu=128, port="12345", radio_addr=0, rate=3e6, samps_per_sym=4):
         gr.top_block.__init__(self, "BPSK Transceiver MAC")
 
         ##################################################
         # Parameters
         ##################################################
-        self.ampl = ampl
         self.arq_timeout = arq_timeout
         self.broadcast_interval = broadcast_interval
+        self.cen_freq = cen_freq
         self.dest_addr = dest_addr
         self.fh_rate = fh_rate
         self.max_arq_attempts = max_arq_attempts
@@ -45,7 +45,6 @@ class bpsk_fhmanet_trx(gr.top_block):
         self.radio_addr = radio_addr
         self.rate = rate
         self.samps_per_sym = samps_per_sym
-        self.cen_freq = cen_freq
 
         ##################################################
         # Variables
@@ -91,36 +90,37 @@ class bpsk_fhmanet_trx(gr.top_block):
         		0.01,
         		10,
         		2.0,
+        		120,
+        		120,
         		True,
         		0.05,
-        		node_expiry_delay=10.0,
-        		expire_on_arq_failure=False,
-        		only_send_if_alive=False,
-        		prepend_dummy=False)
+        		10.0,
+        		False,
+        		False,
+        		False)
         	
-        self.fh_channel_message_strobe_0 = Template error: fhmanet.fh_channel_message_strobe(
-        		$msg, 
-        		$period_ms,
-        		$center_freq, 
-        		$channel_width, 
-        		$num_channels, 
-        		$sequence_length, 
-        		$freq_offset, 
-        		$tx_security_key)
+        self.fh_channel_message_strobe_0 = fhmanet.fh_channel_message_strobe(
+        		1000,
+        		1000, 
+        		50000, 
+        		500, 
+        		12800, 
+        		12345)
         	
-            cannot find 'msg'
         self.bpsk_radio_0 = bpsk_radio(
             sps=8,
             access_code_threshold=0 + 12 + 4*0,
         )
         self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", port, mtu, False)
         self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("T"), 1)
+        self.blocks_message_debug_0 = blocks.message_debug()
 
         ##################################################
         # Connections
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.fhmanet_mac_0, 'ctrl_in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.mac_virtual_channel_encoder_0, 'in'))    
+        self.msg_connect((self.bpsk_radio_0, 'msg_out'), (self.blocks_message_debug_0, 'print_pdu'))    
         self.msg_connect((self.bpsk_radio_0, 'msg_out'), (self.fhmanet_mac_0, 'from_radio'))    
         self.msg_connect((self.fh_channel_message_strobe_0, 'freq_out'), (self.bpsk_radio_0, 'freq_in'))    
         self.msg_connect((self.fhmanet_mac_0, 'to_radio'), (self.bpsk_radio_0, 'msg_in'))    
@@ -129,12 +129,6 @@ class bpsk_fhmanet_trx(gr.top_block):
         self.msg_connect((self.mac_virtual_channel_encoder_0, 'out'), (self.fhmanet_mac_0, 'from_app_arq'))    
         self.connect((self.bpsk_radio_0, 0), (self.osmosdr_sink_0, 0))    
         self.connect((self.osmosdr_source_0, 0), (self.bpsk_radio_0, 0))    
-
-    def get_ampl(self):
-        return self.ampl
-
-    def set_ampl(self, ampl):
-        self.ampl = ampl
 
     def get_arq_timeout(self):
         return self.arq_timeout
@@ -147,6 +141,13 @@ class bpsk_fhmanet_trx(gr.top_block):
 
     def set_broadcast_interval(self, broadcast_interval):
         self.broadcast_interval = broadcast_interval
+
+    def get_cen_freq(self):
+        return self.cen_freq
+
+    def set_cen_freq(self, cen_freq):
+        self.cen_freq = cen_freq
+        self.set_center_freq(self.cen_freq)
 
     def get_dest_addr(self):
         return self.dest_addr
@@ -198,20 +199,13 @@ class bpsk_fhmanet_trx(gr.top_block):
     def set_samps_per_sym(self, samps_per_sym):
         self.samps_per_sym = samps_per_sym
 
-    def get_cen_freq(self):
-        return self.cen_freq
-
-    def set_cen_freq(self, cen_freq):
-        self.cen_freq = cen_freq
-        self.set_center_freq(self.cen_freq)
-
     def get_samp_rate(self):
         return self.samp_rate
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.osmosdr_source_0.set_sample_rate(self.samp_rate)
         self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
+        self.osmosdr_source_0.set_sample_rate(self.samp_rate)
 
     def get_hop_rate(self):
         return self.hop_rate
@@ -230,15 +224,12 @@ class bpsk_fhmanet_trx(gr.top_block):
 
     def set_center_freq(self, center_freq):
         self.center_freq = center_freq
-        self.osmosdr_source_0.set_center_freq(self.center_freq, 0)
         self.osmosdr_sink_0.set_center_freq(self.center_freq, 0)
+        self.osmosdr_source_0.set_center_freq(self.center_freq, 0)
 
 
 def argument_parser():
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    parser.add_option(
-        "", "--ampl", dest="ampl", type="eng_float", default=eng_notation.num_to_str(0.7),
-        help="Set TX BB amp [default=%default]")
     parser.add_option(
         "-t", "--arq-timeout", dest="arq_timeout", type="eng_float", default=eng_notation.num_to_str(.1*0 + 0.04),
         help="Set ARQ timeout [default=%default]")
@@ -246,10 +237,13 @@ def argument_parser():
         "-b", "--broadcast-interval", dest="broadcast_interval", type="eng_float", default=eng_notation.num_to_str(1),
         help="Set Broadcast Interval [default=%default]")
     parser.add_option(
+        "-c", "--cen-freq", dest="cen_freq", type="eng_float", default=eng_notation.num_to_str(914500000),
+        help="Set Center Frequency [default=%default]")
+    parser.add_option(
         "-d", "--dest-addr", dest="dest_addr", type="intx", default=1,
         help="Set Destination address [default=%default]")
     parser.add_option(
-        "-h", "--fh-rate", dest="fh_rate", type="eng_float", default=eng_notation.num_to_str(10),
+        "-r", "--fh-rate", dest="fh_rate", type="eng_float", default=eng_notation.num_to_str(5),
         help="Set Hop rate [default=%default]")
     parser.add_option(
         "", "--max-arq-attempts", dest="max_arq_attempts", type="intx", default=5 * 2,
@@ -264,14 +258,11 @@ def argument_parser():
         "-l", "--radio-addr", dest="radio_addr", type="intx", default=0,
         help="Set Local address [default=%default]")
     parser.add_option(
-        "-r", "--rate", dest="rate", type="eng_float", default=eng_notation.num_to_str(3e6),
+        "-s", "--rate", dest="rate", type="eng_float", default=eng_notation.num_to_str(3e6),
         help="Set Sample rate [default=%default]")
     parser.add_option(
         "", "--samps-per-sym", dest="samps_per_sym", type="intx", default=4,
         help="Set Samples/symbol [default=%default]")
-    parser.add_option(
-        "-c", "--cen-freq", dest="cen_freq", type="eng_float", default=eng_notation.num_to_str(914500000),
-        help="Set Center Frequency [default=%default]")
     return parser
 
 
@@ -279,7 +270,7 @@ def main(top_block_cls=bpsk_fhmanet_trx, options=None):
     if options is None:
         options, _ = argument_parser().parse_args()
 
-    tb = top_block_cls(ampl=options.ampl, arq_timeout=options.arq_timeout, broadcast_interval=options.broadcast_interval, dest_addr=options.dest_addr, fh_rate=options.fh_rate, max_arq_attempts=options.max_arq_attempts, mtu=options.mtu, port=options.port, radio_addr=options.radio_addr, rate=options.rate, samps_per_sym=options.samps_per_sym, cen_freq=options.cen_freq)
+    tb = top_block_cls(arq_timeout=options.arq_timeout, broadcast_interval=options.broadcast_interval, cen_freq=options.cen_freq, dest_addr=options.dest_addr, fh_rate=options.fh_rate, max_arq_attempts=options.max_arq_attempts, mtu=options.mtu, port=options.port, radio_addr=options.radio_addr, rate=options.rate, samps_per_sym=options.samps_per_sym)
     tb.start()
     try:
         raw_input('Press Enter to quit: ')
