@@ -64,9 +64,9 @@ namespace gr {
       static sptr make(float period_ms,
 						double center_freq, 
 						float channel_width, 
-						int num_channels, 
-						double sequence_length, 
-						double tx_security_key);
+						unsigned int num_channels, 
+						unsigned int sequence_length, 
+						unsigned int tx_security_key);
 
       virtual void set_period(float period_ms) = 0;
       virtual float period() const = 0;
@@ -77,14 +77,14 @@ namespace gr {
       virtual void set_channel_width(float channel_width) = 0;
       virtual float channel_width() const = 0;
 
-      virtual void set_num_channels(int num_channels) = 0;
-      virtual int num_channels() const = 0;
+      virtual void set_num_channels(unsigned int num_channels) = 0;
+      virtual unsigned int num_channels() const = 0;
 
-      virtual void set_sequence_length(double sequence_length) = 0; 
-      virtual double sequence_length() const = 0;
+      virtual void set_sequence_length(unsigned int sequence_length) = 0; 
+      virtual unsigned int sequence_length() const = 0;
       
-      virtual void set_tx_security_key(double tx_security_key) = 0; 
-      virtual double tx_security_key() const = 0;
+      virtual void set_tx_security_key(unsigned int tx_security_key) = 0; 
+      virtual unsigned int tx_security_key() const = 0;
     };
 
   } /* namespace fhmanet */

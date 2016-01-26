@@ -42,28 +42,22 @@ namespace gr {
      private:
       uint64_t d_rng_state[2]; //initial xorshift values
       uint64_t d_rng_output = 0; //raw xorshift output
-      //uint16_t d_generated_num = 0; //output after modulus
-      //short d_channel_shift; //re-centers channels at 0
-      //uint16_t d_num_channels;
       uint64_t d_seed; //PRNG seed, should take the transmission security key
       uint64_t d_sequence_length;
 
      public:
-       xorshift(uint64_t seed, uint64_t sequence_length)
-              {d_seed = seed; d_sequence_length = sequence_length;}
+       xorshift(unsigned int seed, unsigned int sequence_length)
+              {d_seed = uint64_t(seed); 
+			   d_sequence_length = uint64_t(sequence_length);}
            ~xorshift();
-
-       //static int checkseed(int d_seed);
 
        std::vector<uint64_t> hop_sequence;
        //^the vector that stores the PRNG output
 
        std::vector<uint64_t> xor_sequence(std::vector<uint64_t> &hop_sequence)
        {
-		  //std::vector<uint64_t> hop_sequence;
-		   
           d_rng_state[0] = d_seed;
-          d_rng_state[1] = d_seed; //consider changing this to clock time?
+          d_rng_state[1] = d_seed;
 
           for( uint8_t i = 0; i < d_sequence_length; i++)
           {
@@ -78,16 +72,12 @@ namespace gr {
             d_rng_state[1] = x;
             d_rng_output = x + y;
 
-            //stuff after isn't pure PRNG, adjusts the output for the FHSS channels. consider moving to another block/source file?
-            //d_generated_num = d_rng_output % d_num_channels;
-            //d_channel_shift = int(d_generated_num) - (d_num_channels / 2);
             hop_sequence[i] = d_rng_output;
           }
           
           return hop_sequence;
         }
 
-       //int seed() const {return d_seed;}
     };
 
   } /* namespace fhmanet */

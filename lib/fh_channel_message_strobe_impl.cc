@@ -43,9 +43,9 @@ namespace gr {
     fh_channel_message_strobe::make(float period_ms,
 									double center_freq, 
 									float channel_width, 
-									int num_channels, 
-									double sequence_length, 
-									double tx_security_key)
+									unsigned int num_channels, 
+									unsigned int sequence_length, 
+									unsigned int tx_security_key)
     {
       return gnuradio::get_initial_sptr
         (new fh_channel_message_strobe_impl(period_ms,
@@ -60,9 +60,9 @@ namespace gr {
 										float period_ms,
 										double center_freq, 
 										float channel_width, 
-										int num_channels, 
-										double sequence_length, 
-										double tx_security_key)
+										unsigned int num_channels, 
+										unsigned int sequence_length, 
+										unsigned int tx_security_key)
       : block("fh_channel_message_strobe",
                  io_signature::make(0, 0, 0),
                  io_signature::make(0, 0, 0)),

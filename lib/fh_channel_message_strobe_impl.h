@@ -39,9 +39,9 @@ namespace gr {
       pmt::pmt_t d_msg;
       double d_center_freq;
       float d_channel_width;
-      int d_num_channels;
-      double d_sequence_length;
-      double d_tx_security_key;
+      unsigned int d_num_channels;
+      unsigned int d_sequence_length;
+      unsigned int d_tx_security_key;
 	  boost::posix_time::ptime d_time;
 	  boost::posix_time::time_duration d_duration;
 	  double d_current_hop; //which hop in the sequence at the current time
@@ -55,9 +55,9 @@ namespace gr {
       fh_channel_message_strobe_impl(float period_ms,
 									 double center_freq,
 									 float channel_width, 
-									 int num_channels, 
-									 double sequence_length, 
-									 double tx_security_key);
+									 unsigned int num_channels, 
+									 unsigned int sequence_length, 
+									 unsigned int tx_security_key);
       ~fh_channel_message_strobe_impl();
 
       void set_period(float period_ms) { d_period_ms = period_ms; }
@@ -69,14 +69,14 @@ namespace gr {
 	  void set_channel_width(float channel_width) {d_channel_width = channel_width; }
       float channel_width() const { return d_channel_width; }
 
-	  void set_num_channels(int num_channels) {d_num_channels = num_channels; }
-      int num_channels() const { return d_num_channels; }
+	  void set_num_channels(unsigned int num_channels) {d_num_channels = num_channels; }
+      unsigned int num_channels() const { return d_num_channels; }
       
-      void set_sequence_length(double sequence_length) {d_sequence_length = sequence_length; }
-      double sequence_length() const { return d_sequence_length; }
+      void set_sequence_length(unsigned int sequence_length) {d_sequence_length = sequence_length; }
+      unsigned int sequence_length() const { return d_sequence_length; }
       
-      void set_tx_security_key(double tx_security_key) {d_tx_security_key = tx_security_key; }
-      double tx_security_key() const { return d_tx_security_key; }
+      void set_tx_security_key(unsigned int tx_security_key) {d_tx_security_key = tx_security_key; }
+      unsigned int tx_security_key() const { return d_tx_security_key; }
       
       bool start();
       bool stop();
