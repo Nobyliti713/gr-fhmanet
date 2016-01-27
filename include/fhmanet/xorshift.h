@@ -51,10 +51,11 @@ namespace gr {
 			   d_sequence_length = uint64_t(sequence_length);}
            ~xorshift();
 
-       std::vector<uint64_t> hop_sequence;
+       //std::vector<uint64_t> hop_sequence;
        //^the vector that stores the PRNG output
 
-       std::vector<uint64_t> xor_sequence(std::vector<uint64_t> &hop_sequence)
+       //std::vector<uint64_t> xor_sequence(std::vector<uint64_t>& hop_sequence)
+       void xor_sequence(std::vector<uint64_t> hop_sequence)
        {
           d_rng_state[0] = d_seed;
           d_rng_state[1] = d_seed;
@@ -75,7 +76,7 @@ namespace gr {
             hop_sequence[i] = d_rng_output;
           }
           
-          return hop_sequence;
+          //return hop_sequence;
         }
 
     };

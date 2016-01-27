@@ -40,9 +40,9 @@ namespace gr {
   namespace fhmanet {
 
     fh_channel_message_strobe::sptr
-    fh_channel_message_strobe::make(float period_ms,
+    fh_channel_message_strobe::make(unsigned int period_ms,
 									double center_freq, 
-									float channel_width, 
+									unsigned int channel_width, 
 									unsigned int num_channels, 
 									unsigned int sequence_length, 
 									unsigned int tx_security_key)
@@ -57,9 +57,9 @@ namespace gr {
     }
 
     fh_channel_message_strobe_impl::fh_channel_message_strobe_impl(
-										float period_ms,
+										unsigned int period_ms,
 										double center_freq, 
-										float channel_width, 
+										unsigned int channel_width, 
 										unsigned int num_channels, 
 										unsigned int sequence_length, 
 										unsigned int tx_security_key)
@@ -73,15 +73,16 @@ namespace gr {
         d_channel_width(channel_width),
         d_num_channels(num_channels),
         d_sequence_length(sequence_length),
-        d_tx_security_key(tx_security_key)
+        d_tx_security_key(tx_security_key),
+        d_xorshift(tx_security_key, sequence_length)
     {
       message_port_register_out(pmt::mp("freq_out"));
       d_thread = boost::shared_ptr<boost::thread>
         (new boost::thread(boost::bind(
 						&fh_channel_message_strobe_impl::run, this)));
         
-	  d_xorshift = new xorshift(d_tx_security_key, d_sequence_length);
-	  d_xorshift->xor_sequence(d_hop_sequence);
+	  //d_xorshift = xorshift(d_tx_security_key, d_sequence_length);
+	  d_xorshift.xor_sequence(d_hop_sequence);
 	  
 	  //translate raw PRNG output to frequencies
 	  for( uint8_t i = 0; i < d_sequence_length; i++)
@@ -99,7 +100,6 @@ namespace gr {
 
     fh_channel_message_strobe_impl::~fh_channel_message_strobe_impl()
     {
-		delete d_xorshift;
     }
 
     bool

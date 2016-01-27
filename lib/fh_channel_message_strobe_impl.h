@@ -35,10 +35,10 @@ namespace gr {
     private:
       boost::shared_ptr<boost::thread> d_thread;
       bool d_finished;
-      float d_period_ms;
+      unsigned int d_period_ms;
       pmt::pmt_t d_msg;
       double d_center_freq;
-      float d_channel_width;
+      unsigned int d_channel_width;
       unsigned int d_num_channels;
       unsigned int d_sequence_length;
       unsigned int d_tx_security_key;
@@ -47,27 +47,27 @@ namespace gr {
 	  double d_current_hop; //which hop in the sequence at the current time
 	  double d_hop_index; //must be <= sequence_length
 	  std::vector<uint64_t> d_hop_sequence;
-	  xorshift *d_xorshift;
+	  xorshift d_xorshift;
 	  
       void run();
 
     public:
-      fh_channel_message_strobe_impl(float period_ms,
+      fh_channel_message_strobe_impl(unsigned int period_ms,
 									 double center_freq,
-									 float channel_width, 
+									 unsigned int channel_width, 
 									 unsigned int num_channels, 
 									 unsigned int sequence_length, 
 									 unsigned int tx_security_key);
       ~fh_channel_message_strobe_impl();
 
-      void set_period(float period_ms) { d_period_ms = period_ms; }
-      float period() const { return d_period_ms; }
+      void set_period(unsigned int period_ms) { d_period_ms = period_ms; }
+      unsigned int period() const { return d_period_ms; }
       
       void set_center_freq(double center_freq) {d_center_freq = center_freq; }
       double center_freq() const { return d_center_freq; }
       
-	  void set_channel_width(float channel_width) {d_channel_width = channel_width; }
-      float channel_width() const { return d_channel_width; }
+	  void set_channel_width(unsigned int channel_width) {d_channel_width = channel_width; }
+      unsigned int channel_width() const { return d_channel_width; }
 
 	  void set_num_channels(unsigned int num_channels) {d_num_channels = num_channels; }
       unsigned int num_channels() const { return d_num_channels; }

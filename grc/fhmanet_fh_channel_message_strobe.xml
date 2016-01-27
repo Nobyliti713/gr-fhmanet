@@ -35,7 +35,7 @@
 		<name>Period (ms)</name>
 		<key>period_ms</key>
 		<value>1000</value>
-		<type>real</type>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Center Frequency</name>
@@ -47,7 +47,7 @@
 		<name>Channel Width</name>
 		<key>channel_width</key>
 		<value>50000</value>
-		<type>real</type>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Number of Channels</name>
