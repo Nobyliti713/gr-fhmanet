@@ -46,7 +46,7 @@ namespace gr {
 	  boost::posix_time::time_duration d_duration;
 	  double d_current_hop; //which hop in the sequence at the current time
 	  double d_hop_index; //must be <= sequence_length
-	  std::vector<uint64_t> d_hop_sequence;
+	  std::vector<unsigned long long> d_hop_sequence;
 	  xorshift d_xorshift;
 	  
       void run();
