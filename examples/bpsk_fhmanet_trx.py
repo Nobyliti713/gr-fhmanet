@@ -5,7 +5,7 @@
 # Title: BPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Mon Jan 25 19:30:42 2016
+# Generated: Thu Jan 28 10:44:49 2016
 ##################################################
 
 import os
@@ -99,7 +99,7 @@ class bpsk_fhmanet_trx(gr.top_block):
         		False,
         		False)
         	
-        self.fh_channel_message_strobe_0 = fhmanet.fh_channel_message_strobe(
+        self.fh_channel_message_strobe_1 = fhmanet.fh_channel_message_strobe(
         		1000,
         		1000, 
         		50000, 
@@ -122,7 +122,7 @@ class bpsk_fhmanet_trx(gr.top_block):
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.mac_virtual_channel_encoder_0, 'in'))    
         self.msg_connect((self.bpsk_radio_0, 'msg_out'), (self.blocks_message_debug_0, 'print_pdu'))    
         self.msg_connect((self.bpsk_radio_0, 'msg_out'), (self.fhmanet_mac_0, 'from_radio'))    
-        self.msg_connect((self.fh_channel_message_strobe_0, 'freq_out'), (self.bpsk_radio_0, 'freq_in'))    
+        self.msg_connect((self.fh_channel_message_strobe_1, 'freq_out'), (self.bpsk_radio_0, 'freq_in'))    
         self.msg_connect((self.fhmanet_mac_0, 'to_radio'), (self.bpsk_radio_0, 'msg_in'))    
         self.msg_connect((self.fhmanet_mac_0, 'to_app'), (self.mac_virtual_channel_decoder_0, 'in'))    
         self.msg_connect((self.mac_virtual_channel_decoder_0, 'out0'), (self.blocks_socket_pdu_0, 'pdus'))    

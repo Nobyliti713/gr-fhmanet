@@ -4,8 +4,6 @@
 
 %include "gnuradio.i"			// the common stuff
 
-%apply std::vector<unsigned long> { std::vector<size_t> };
-
 //load generated python docstrings
 %include "fhmanet_swig_doc.i"
 
