@@ -59,7 +59,6 @@ GR_SWIG_INSTALL(TARGETS fhmanet_swig DESTINATION ${GR_PYTHON_DIR}/fhmanet)
 ########################################################################
 install(
     FILES
-    fhmanet_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/fhmanet_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/fhmanet/swig
 )
