@@ -14,6 +14,7 @@
 		$exp_backoff,
 		$backoff_randomness,
 		$node_expiry_delay,
+		$selector,
 		$expire_on_arq_failure,
 		$only_send_if_alive,
 		$prepend_dummy)
@@ -81,6 +82,12 @@
 		<value>10.0</value>
         <type>real</type>
     </param>
+	<param>
+        <name>Selector</name>
+        <key>selector</key>
+		<value>0</value>
+        <type>int</type>
+    </param>    
 	<param>
 		<name>Expire on ARQ failure</name>
 		<key>expire_on_arq_failure</key>
@@ -171,6 +178,8 @@
 	Sync Timeout: time interval in seconds after which the radio is 
 					considered unsynchronized.
 	ARQ timeout and  Node expiry delay in seconds
+	Selector: the input index variable/parameter for the selector block 
+				that controls switching from SCH to FHSS
 	Backoff randomness adds to current backoff delay *up to* given percentage
   </doc>	
 </block>

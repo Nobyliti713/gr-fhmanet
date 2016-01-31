@@ -5,7 +5,7 @@
 # Title: BPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Sat Jan 30 17:56:26 2016
+# Generated: Mon Feb  1 01:27:04 2016
 ##################################################
 
 import os
@@ -26,7 +26,7 @@ import pmt
 import time
 
 
-class bpsk_fhmanet_trx(gr.top_block):
+class bpsk_fhmanet_selector_blade(gr.top_block):
 
     def __init__(self, arq_timeout=.1*0 + 0.04, broadcast_interval=1, cen_freq=914500000, dest_addr=1, fh_rate=1, max_arq_attempts=5 * 2, mtu=128, port="12345", radio_addr=0, rate=3e6, samps_per_sym=4):
         gr.top_block.__init__(self, "BPSK Transceiver MAC")
@@ -50,6 +50,7 @@ class bpsk_fhmanet_trx(gr.top_block):
         # Variables
         ##################################################
         self.hop_rate = hop_rate = fh_rate
+        self.selector = selector = 0
         self.samp_rate = samp_rate = rate
         self.d_sequence_length = d_sequence_length = 86400
         self.d_period_ms = d_period_ms = 1000 / hop_rate
@@ -97,6 +98,7 @@ class bpsk_fhmanet_trx(gr.top_block):
         		True,
         		0.05,
         		10.0,
+        		selector,
         		False,
         		False,
         		False)
@@ -104,6 +106,7 @@ class bpsk_fhmanet_trx(gr.top_block):
         self.bpsk_radio_0 = bpsk_radio(
             sps=8,
             access_code_threshold=0 + 12 + 4*0,
+            selector=selector,
         )
         self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", port, mtu, False)
         self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("T"), 1)
@@ -201,13 +204,20 @@ class bpsk_fhmanet_trx(gr.top_block):
         self.hop_rate = hop_rate
         self.set_d_period_ms(1000 / self.hop_rate)
 
+    def get_selector(self):
+        return self.selector
+
+    def set_selector(self, selector):
+        self.selector = selector
+        self.bpsk_radio_0.set_selector(self.selector)
+
     def get_samp_rate(self):
         return self.samp_rate
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
         self.osmosdr_source_0.set_sample_rate(self.samp_rate)
+        self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
 
     def get_d_sequence_length(self):
         return self.d_sequence_length
@@ -232,8 +242,8 @@ class bpsk_fhmanet_trx(gr.top_block):
 
     def set_center_freq(self, center_freq):
         self.center_freq = center_freq
-        self.osmosdr_sink_0.set_center_freq(self.center_freq, 0)
         self.osmosdr_source_0.set_center_freq(self.center_freq, 0)
+        self.osmosdr_sink_0.set_center_freq(self.center_freq, 0)
 
 
 def argument_parser():
@@ -274,7 +284,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=bpsk_fhmanet_trx, options=None):
+def main(top_block_cls=bpsk_fhmanet_selector_blade, options=None):
     if options is None:
         options, _ = argument_parser().parse_args()
 

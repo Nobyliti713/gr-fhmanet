@@ -140,7 +140,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 75)</value>
+      <value>(840, 75)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -581,7 +581,7 @@ currently center_freq</value>
     </param>
     <param>
       <key>comment</key>
-      <value></value>
+      <value>SCH broadcast/FHSS Rx selector</value>
     </param>
     <param>
       <key>affinity</key>
@@ -605,7 +605,7 @@ currently center_freq</value>
     </param>
     <param>
       <key>input_index</key>
-      <value>0</value>
+      <value>selector</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -644,7 +644,7 @@ currently center_freq</value>
     </param>
     <param>
       <key>comment</key>
-      <value></value>
+      <value>SCH broadcast/FHSS Tx selector</value>
     </param>
     <param>
       <key>affinity</key>
@@ -668,7 +668,7 @@ currently center_freq</value>
     </param>
     <param>
       <key>input_index</key>
-      <value>0</value>
+      <value>selector</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1840,6 +1840,49 @@ currently center_freq</value>
     <param>
       <key>type</key>
       <value>ccc</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(664, 75)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>selector</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>SCH/FHSS Selector</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>intx</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
     </param>
   </block>
   <block>

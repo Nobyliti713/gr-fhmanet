@@ -57,7 +57,7 @@ class fhmanet_mac(gr.basic_block):
     """
     def __init__(self, addr, timeout, max_attempts, broadcast_interval=2.0,
 			sync_tx_interval=120, sync_timeout=120, exp_backoff=True, 
-			backoff_randomness=0.05, node_expiry_delay=10.0, 
+			backoff_randomness=0.05, node_expiry_delay=10.0, selector=0, 
 			expire_on_arq_failure=False, only_send_if_alive=False,
             prepend_dummy=False):
         gr.basic_block.__init__(self,
@@ -96,13 +96,14 @@ class fhmanet_mac(gr.basic_block):
         
         self.queue = Queue.Queue()                        #queue for msg destined for ARQ path
         
-        self.last_tx_time = None
+        self.last_tx_time = time.time()
         self.broadcast_interval = broadcast_interval
         
+        self.selector = selector
         self.sync_state = 'INIT'
         self.sync_tx_interval = sync_tx_interval #150000 / hop_rate or 120?
         self.sync_rx_timeout = sync_timeout #120
-        self.last_sync_time = None
+        self.last_sync_time = time.time()
         
         self.nodes = {}
         self.node_expiry_delay = node_expiry_delay
@@ -168,8 +169,8 @@ class fhmanet_mac(gr.basic_block):
 				#implement later, currently set to center_freq
 
 			#set modem selector block to single channel
-			if dpsk_radio.blk2_selector_0.input_index != 0:
-				dpsk_radio.blk2_selector_0.input_index = 0
+			if self.selector != 0:
+				self.selector = 0
 			#set single-channel FXFF center frequency to selected sub-channel
 			#dpsk_radio.rnd_sync_listen_channel = hop_sequence[rnd_sync_listen_channel]
 			#INIT SYNC times out
@@ -180,8 +181,8 @@ class fhmanet_mac(gr.basic_block):
 					#work through the hop_sequence from 0-sequence_length?			
 			self.sync_state = 'SYNCED'
 			#set modem selector block to FH
-			if dpsk_radio.blk2_selector_0.input_index != 1:
-				dpsk_radio.blk2_selector_0.input_index = 1
+			if self.selector != 1:
+				self.selector = 1
 											          
        #if sync_state = SYNCED
        if self.sync_state == 'SYNCED' and ((time.time() - self.last_sync_time) >= self.sync_tx_interval):
@@ -430,15 +431,15 @@ class fhmanet_mac(gr.basic_block):
 						self.sync_rank = src_addr
 						print "Synced to packet from node: %03u" % (src_addr)
 						self.sync_state = 'SYNCED'
-						if dpsk_radio.blk2_selector_0.input_index != 1:
-							dpsk_radio.blk2_selector_0.input_index = 1						
+						if self.selector != 1:
+							self.selector = 1						
 					else:
 						print "SYNC protocol packet from lower-ranked node"
 						#tell the sync_timer to reset, because the packet confirms good sync
 						self.last_sync_time = data[5]
 						self.sync_state = 'SYNCED'
-						if dpsk_radio.blk2_selector_0.input_index != 1:
-							dpsk_radio.blk2_selector_0.input_index = 1
+						if self.selector != 1:
+							self.selector = 1
 
                 #if self.sync_state == SYNCED and incoming_protocol_id == SYNC_PROTOCOL_ID:						
 					#do nothing?
@@ -536,7 +537,7 @@ class fhmanet_mac(gr.basic_block):
         #sys.stderr.write("[c+]");sys.stderr.flush();
         with self.lock:
 			#sys.stderr.write("[c]");sys.stderr.flush();
-			if (self.broadcast_interval > 0) and (self.last_tx_time is None or (time.time() - self.last_tx_time) >= self.broadcast_interval):
+			if (self.broadcast_interval > 0) and ((time.time() - self.last_tx_time) >= self.broadcast_interval):
 				self.send_bcast_pkt()
 				
 			self.sync_fsm()

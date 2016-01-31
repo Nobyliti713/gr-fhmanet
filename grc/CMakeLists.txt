@@ -20,6 +20,5 @@
 install(FILES
 	fhmanet_bpsk_radio.py.xml
 	fhmanet_fhmanet_mac.py.xml
-	fhmanet_fh_channel_message_strobe.xml
     DESTINATION share/gnuradio/grc/blocks
 )

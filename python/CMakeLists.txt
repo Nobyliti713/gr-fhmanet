@@ -33,6 +33,7 @@ GR_PYTHON_INSTALL(
     __init__.py
     bpsk_radio.py
     fhmanet_mac.py
+    hopset_import.py
     DESTINATION ${GR_PYTHON_DIR}/fhmanet
 )
 

@@ -6,9 +6,11 @@
   <make>bpsk_radio(
     sps=$sps,
     access_code_threshold=$access_code_threshold,
+    selector=$selector,
 )</make>
   <callback>set_sps($sps)</callback>
   <callback>set_access_code_threshold($access_code_threshold)</callback>
+  <callback>set_selector($selector)</callback>
   <param>
     <name>Samples/symbol</name>
     <key>sps</key>
@@ -18,6 +20,12 @@
   <param>
     <name>Access code threshold</name>
     <key>access_code_threshold</key>
+    <value>0</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>SCH/FHSS Selector</name>
+    <key>selector</key>
     <value>0</value>
     <type>raw</type>
   </param>
