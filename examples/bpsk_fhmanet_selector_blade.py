@@ -5,7 +5,7 @@
 # Title: BPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Mon Feb  1 01:27:04 2016
+# Generated: Tue Feb  2 16:15:12 2016
 ##################################################
 
 import os
@@ -109,7 +109,7 @@ class bpsk_fhmanet_selector_blade(gr.top_block):
             selector=selector,
         )
         self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", port, mtu, False)
-        self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("T"), 1)
+        self.blocks_message_strobe_1 = blocks.message_strobe(pmt.to_pmt(fhmanet.get_hop_freq(d_period_ms, d_sequence_length)), 1000 / hop_rate)
         self.blocks_message_strobe_0 = blocks.message_strobe(pmt.intern("T"), 1)
         self.blocks_message_debug_0 = blocks.message_debug()
 
@@ -117,7 +117,7 @@ class bpsk_fhmanet_selector_blade(gr.top_block):
         # Connections
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0, 'strobe'), (self.fhmanet_mac_0, 'ctrl_in'))    
-        self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.bpsk_radio_0, 'freq_in'))    
+        self.msg_connect((self.blocks_message_strobe_1, 'strobe'), (self.bpsk_radio_0, 'freq_in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.mac_virtual_channel_encoder_0, 'in'))    
         self.msg_connect((self.bpsk_radio_0, 'msg_out'), (self.blocks_message_debug_0, 'print_pdu'))    
         self.msg_connect((self.bpsk_radio_0, 'msg_out'), (self.fhmanet_mac_0, 'from_radio'))    
@@ -203,6 +203,7 @@ class bpsk_fhmanet_selector_blade(gr.top_block):
     def set_hop_rate(self, hop_rate):
         self.hop_rate = hop_rate
         self.set_d_period_ms(1000 / self.hop_rate)
+        self.blocks_message_strobe_1.set_period(1000 / self.hop_rate)
 
     def get_selector(self):
         return self.selector
@@ -216,20 +217,22 @@ class bpsk_fhmanet_selector_blade(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.osmosdr_source_0.set_sample_rate(self.samp_rate)
         self.osmosdr_sink_0.set_sample_rate(self.samp_rate)
+        self.osmosdr_source_0.set_sample_rate(self.samp_rate)
 
     def get_d_sequence_length(self):
         return self.d_sequence_length
 
     def set_d_sequence_length(self, d_sequence_length):
         self.d_sequence_length = d_sequence_length
+        self.blocks_message_strobe_1.set_msg(pmt.to_pmt(fhmanet.get_hop_freq(self.d_period_ms, self.d_sequence_length)))
 
     def get_d_period_ms(self):
         return self.d_period_ms
 
     def set_d_period_ms(self, d_period_ms):
         self.d_period_ms = d_period_ms
+        self.blocks_message_strobe_1.set_msg(pmt.to_pmt(fhmanet.get_hop_freq(self.d_period_ms, self.d_sequence_length)))
 
     def get_channel_width(self):
         return self.channel_width
@@ -242,8 +245,8 @@ class bpsk_fhmanet_selector_blade(gr.top_block):
 
     def set_center_freq(self, center_freq):
         self.center_freq = center_freq
-        self.osmosdr_source_0.set_center_freq(self.center_freq, 0)
         self.osmosdr_sink_0.set_center_freq(self.center_freq, 0)
+        self.osmosdr_source_0.set_center_freq(self.center_freq, 0)
 
 
 def argument_parser():
