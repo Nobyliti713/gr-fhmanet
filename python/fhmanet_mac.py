@@ -22,8 +22,9 @@
 
 from __future__ import with_statement
 
-import sys, datetime, time, random, struct, threading
+import sys, time, random, struct, threading
 from math import pi
+from datetime import datetime
 import Queue
 import numpy
 from gnuradio import gr
@@ -199,7 +200,7 @@ class fhmanet_mac(gr.basic_block):
     
     #transmit sync packet
     def send_sync_pkt(self):
-        data = (datetime.now().hour * 3600000) + (datetime.now().minute 
+        data = (datetime.now().hour * 3600000) + (datetime.now().minute \
 			* 60000) + (datetime.now().second * 1000) + \
 			(datetime.now().microsecond / 1000)
         meta_dict = {'EM_DEST_ADDR': constants.BROADCAST_ADDR, 'EM_SRC_ID': self.sync_rank} #metadata is broadcast pkt from src_addr

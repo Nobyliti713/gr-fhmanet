@@ -5,7 +5,7 @@
 # Title: BPSK Transceiver MAC
 # Author: Jason Noble
 # Description: bladeRF MAC and modem based on J. Malbury's Simple MAC.
-# Generated: Tue Feb  2 16:15:12 2016
+# Generated: Wed Feb  3 18:19:42 2016
 ##################################################
 
 import os
@@ -28,7 +28,7 @@ import time
 
 class bpsk_fhmanet_selector_blade(gr.top_block):
 
-    def __init__(self, arq_timeout=.1*0 + 0.04, broadcast_interval=1, cen_freq=914500000, dest_addr=1, fh_rate=1, max_arq_attempts=5 * 2, mtu=128, port="12345", radio_addr=0, rate=3e6, samps_per_sym=4):
+    def __init__(self, arq_timeout=.1*0 + 0.04, broadcast_interval=1, cen_freq=914500000, dest_addr=1, fh_rate=1, max_arq_attempts=5 * 2, mtu=128, port="12345", radio_addr=0, rate=10e6, samps_per_sym=4):
         gr.top_block.__init__(self, "BPSK Transceiver MAC")
 
         ##################################################
@@ -90,9 +90,9 @@ class bpsk_fhmanet_selector_blade(gr.top_block):
         self.mac_virtual_channel_decoder_0 = mac.virtual_channel_decoder(3, [0,1])
         self.fhmanet_mac_0 = fhmanet.fhmanet_mac(
         		radio_addr,
-        		0.01,
+        		1,
+        		5,
         		10,
-        		2.0,
         		120,
         		120,
         		True,
@@ -279,7 +279,7 @@ def argument_parser():
         "-l", "--radio-addr", dest="radio_addr", type="intx", default=0,
         help="Set Local address [default=%default]")
     parser.add_option(
-        "-s", "--rate", dest="rate", type="eng_float", default=eng_notation.num_to_str(3e6),
+        "-s", "--rate", dest="rate", type="eng_float", default=eng_notation.num_to_str(10e6),
         help="Set Sample rate [default=%default]")
     parser.add_option(
         "", "--samps-per-sym", dest="samps_per_sym", type="intx", default=4,
