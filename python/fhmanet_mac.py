@@ -30,7 +30,6 @@ from gnuradio import gr
 import pmt
 from gnuradio.digital import packet_utils
 import gnuradio.digital as gr_digital
-#import fhmanet
 from mac import constants
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -51,9 +50,8 @@ class Node():
         self.alive = False
 
 class fhmanet_mac(gr.basic_block):
-#class fhmanet_mac(gr.sync_block):
     """
-    docstring for block mac
+    docstring for block fhmanet mac
     """
     def __init__(self, addr, timeout, max_attempts, broadcast_interval=2.0,
 			sync_tx_interval=120, sync_timeout=120, exp_backoff=True, 
@@ -175,20 +173,21 @@ class fhmanet_mac(gr.basic_block):
 			#dpsk_radio.rnd_sync_listen_channel = hop_sequence[rnd_sync_listen_channel]
 			#INIT SYNC times out
 			if (time.time() - self.last_sync_time) >= self.sync_rx_timeout:
-				print "Sync timed out after: %03d" % (self.sync_rx_timeout)
+				print "Failed to acquire Sync after: %03d. Defaulting to internal time." % (self.sync_rx_timeout)
 			#self.send_sync_pkt() needs to broadcast sync on all channels
 				#broadcast sync packets to every channel
 					#work through the hop_sequence from 0-sequence_length?			
-			self.sync_state = 'SYNCED'
+				self.sync_state = 'SYNCED'
 			#set modem selector block to FH
-			if self.selector != 1:
-				self.selector = 1
+				if self.selector != 1:
+					self.selector = 1
 											          
-       #if sync_state = SYNCED
+       #if sync_state == SYNCED
        if self.sync_state == 'SYNCED' and ((time.time() - self.last_sync_time) >= self.sync_tx_interval):
 			self.send_sync_pkt()
 
        if self.sync_state == 'SYNCED' and ((time.time() - self.last_sync_time) >= self.sync_rx_timeout):
+			print "Changing state to INIT"
 			self.sync_state = 'INIT'
 
 			
@@ -199,7 +198,7 @@ class fhmanet_mac(gr.basic_block):
 	#tx
     
     #transmit sync packet
-    def send_sync_pkt(self, pdu_tuple, pkt_cnt, protocol_id, control, allow_dummy=True):
+    def send_sync_pkt(self):
         data = (datetime.now().hour * 3600000) + (datetime.now().minute 
 			* 60000) + (datetime.now().second * 1000) + \
 			(datetime.now().microsecond / 1000)
