@@ -174,11 +174,14 @@ class fhmanet_mac(gr.basic_block):
 			#dpsk_radio.rnd_sync_listen_channel = hop_sequence[rnd_sync_listen_channel]
 			#INIT SYNC times out
 			if (time.time() - self.last_sync_time) >= self.sync_rx_timeout:
+				print "Time elapsed is: ", (time.time() - self.last_sync_time)
 				print "Failed to acquire Sync after: %03d. Defaulting to internal time." % (self.sync_rx_timeout)
 			#self.send_sync_pkt() needs to broadcast sync on all channels
 				#broadcast sync packets to every channel
 					#work through the hop_sequence from 0-sequence_length?			
 				self.sync_state = 'SYNCED'
+				self.last_sync_time = time.time()
+				print "New Sync Time is: ", self.last_sync_time
 			#set modem selector block to FH
 				if self.selector != 1:
 					self.selector = 1
@@ -190,6 +193,7 @@ class fhmanet_mac(gr.basic_block):
        if self.sync_state == 'SYNCED' and ((time.time() - self.last_sync_time) >= self.sync_rx_timeout):
 			print "Changing state to INIT"
 			self.sync_state = 'INIT'
+			self.last_sync_time = time.time()
 
 			
     #transmit layer 3 broadcast packet
@@ -203,8 +207,9 @@ class fhmanet_mac(gr.basic_block):
         data = (datetime.now().hour * 3600000) + (datetime.now().minute \
 			* 60000) + (datetime.now().second * 1000) + \
 			(datetime.now().microsecond / 1000)
+        data_binary = [int(digit) for digit in bin(data)[2:]]
         meta_dict = {'EM_DEST_ADDR': constants.BROADCAST_ADDR, 'EM_SRC_ID': self.sync_rank} #metadata is broadcast pkt from src_addr
-        pdu_tuple = (data, meta_dict)
+        pdu_tuple = (data_binary, meta_dict)
         self.tx_no_arq(pdu_tuple, self.SYNC_PROTOCOL_ID)
 
 	   
@@ -219,7 +224,7 @@ class fhmanet_mac(gr.basic_block):
     
     #transmit data through non-arq path    
     def tx_no_arq(self, pdu_tuple, protocol_id):
-        self.send_pkt_radio(pdu_tuple, self.pkt_cnt_no_arq, protocol_id, ARQ_NO_REQ)
+        self.send_pkt_radio(pdu_tuple, self.pkt_cnt_no_arq, protocol_id, constants.ARQ_NO_REQ)
         self.pkt_cnt_no_arq = ( self.pkt_cnt_no_arq + 1 ) % 256
     
     
@@ -260,7 +265,7 @@ class fhmanet_mac(gr.basic_block):
         ]
         
         #if sending a sync packet, timestamp should be as late as possible
-        #eventually re-write to put timestamp here
+        #eventually re-write to put timestamp here?
         data += payload
         
         data = pmt.init_u8vector(len(data), data)
@@ -417,6 +422,10 @@ class fhmanet_mac(gr.basic_block):
                 if self.sync_state == 'INIT' and incoming_protocol_id == self.SYNC_PROTOCOL_ID:
 					if src_addr < self.sync_rank: #if the origin node is ranked "higher" in the network's hierarchy
 						rx_sync_time = data[5]
+						#convert the payload back into a decimal interpretation of milliseconds, then use modulus division to get hours/minutes/seconds
+						rx_sync_time = list(pmt.u8vector_elements(rx_sync_time))
+						rx_sync_time = ''.join(map(str,rx_sync_time))
+						rx_sync_time = int(rx_sync_time,base=2)
 						s, ms = divmod(rx_sync_time, 1000)
 						m, s = divmod(s, 60)
 						h, m = divmod(m, 60)
@@ -426,7 +435,7 @@ class fhmanet_mac(gr.basic_block):
 						os.system('hwclock --set --date=%s:%s:%s.%s' % (h, m, s, ns) )
 						os.system('hwclock --hctosys')
 						#reset sync_timer
-						self.last_sync_time = rx_sync_time
+						self.last_sync_time = time.time()
 						#updates sync_rank with src_addr, also means future sync packets issued from this node have rank of higher node
 						self.sync_rank = src_addr
 						print "Synced to packet from node: %03u" % (src_addr)
@@ -436,7 +445,7 @@ class fhmanet_mac(gr.basic_block):
 					else:
 						print "SYNC protocol packet from lower-ranked node"
 						#tell the sync_timer to reset, because the packet confirms good sync
-						self.last_sync_time = data[5]
+						self.last_sync_time = time.time()
 						self.sync_state = 'SYNCED'
 						if self.selector != 1:
 							self.selector = 1
