@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<block>
+	<name>FH MSG Tester</name>
+	<key>fh_msg_tester</key>
+	<category>gr-fhmanet</category>
+	<import>import fhmanet</import>
+	<make>fhmanet.fh_msg_tester(
+		$center_freq,
+		$period_ms,
+		$sequence_length)
+	</make>
+
+    <param>
+        <name>Center Frequency</name>
+        <key>center_freq</key>
+		<value>914500000</value>
+        <type>real</type>
+    </param>
+    <param>
+        <name>Period (ms)</name>
+        <key>period_ms</key>
+		<value>1000</value>
+        <type>int</type>
+    </param>    
+    <param>
+        <name>Sequence Length</name>
+        <key>sequence_length</key>
+		<value>86400</value>
+        <type>int</type>
+    </param>    
+  <sink>
+    <name>ctrl_in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  
+  <source>
+    <name>tx_freq_out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+  <source>
+    <name>rx_freq_out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>  
+  <doc>
+	Stuff goes here.
+  </doc>	
+</block>

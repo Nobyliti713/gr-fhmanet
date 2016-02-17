@@ -8,13 +8,15 @@
 		$addr,
 		$timeout,
 		$maximum_attempts,
+		$center_freq,
+		$period_ms,
+		$sequence_length,
 		$broadcast_interval,
 		$sync_tx_interval,
 		$sync_timeout,
 		$exp_backoff,
 		$backoff_randomness,
 		$node_expiry_delay,
-		$selector,
 		$expire_on_arq_failure,
 		$only_send_if_alive,
 		$prepend_dummy)
@@ -26,17 +28,35 @@
         <type>int</type>
     </param>
     <param>
+        <name>ARQ timeout</name>
+        <key>timeout</key>
+		<value>0.01</value>
+        <type>real</type>
+    </param>
+    <param>
         <name>Max ARQ attempts</name>
         <key>maximum_attempts</key>
 		<value>10</value>
         <type>int</type>
     </param>
     <param>
-        <name>ARQ timeout</name>
-        <key>timeout</key>
-		<value>0.01</value>
-        <type>real</type>
+        <name>Center Freq</name>
+        <key>center_freq</key>
+		<value>914500000</value>
+        <type>int</type>
     </param>
+	<param>
+        <name>Period (ms)</name>
+        <key>period_ms</key>
+		<value>1000</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Sequence Length</name>
+        <key>sequence_length</key>
+		<value>86400</value>
+        <type>int</type>
+    </param>      
 	<param>
         <name>Broadcast interval</name>
         <key>broadcast_interval</key>
@@ -82,12 +102,6 @@
 		<value>10.0</value>
         <type>real</type>
     </param>
-	<param>
-        <name>Selector</name>
-        <key>selector</key>
-		<value>0</value>
-        <type>int</type>
-    </param>    
 	<param>
 		<name>Expire on ARQ failure</name>
 		<key>expire_on_arq_failure</key>
@@ -155,7 +169,16 @@
     <type>message</type>
     <optional>1</optional>
   </sink>
-  
+  <source>
+    <name>tx_freq_out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+  <source>
+    <name>rx_freq_out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>     
   <source>
     <name>to_radio</name>
     <type>message</type>

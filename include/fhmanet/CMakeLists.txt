@@ -21,6 +21,5 @@
 # Install public header files
 ########################################################################
 install(FILES
-    api.h
-    DESTINATION include/fhmanet
+    api.h DESTINATION include/fhmanet
 )

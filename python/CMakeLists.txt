@@ -33,7 +33,7 @@ GR_PYTHON_INSTALL(
     __init__.py
     bpsk_radio.py
     fhmanet_mac.py
-    hopset_import.py
+    fh_msg_tester.py
     DESTINATION ${GR_PYTHON_DIR}/fhmanet
 )
 
@@ -44,3 +44,4 @@ include(GrTest)
 
 set(GR_TEST_TARGET_DEPS gnuradio-fhmanet)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
+GR_ADD_TEST(qa_fh_channel_message_strobe ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fh_channel_message_strobe.py)

@@ -18,7 +18,7 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-	fhmanet_bpsk_radio.py.xml
-	fhmanet_fhmanet_mac.py.xml
-    DESTINATION share/gnuradio/grc/blocks
+    fhmanet_bpsk_radio.py.xml
+    fhmanet_fhmanet_mac.py.xml 
+    fhmanet_fh_msg_tester.py.xml DESTINATION share/gnuradio/grc/blocks
 )

@@ -4,19 +4,15 @@
   <category>gr-fhmanet</category>
   <import>from bpsk_radio import bpsk_radio  # grc-generated hier_block</import>
   <make>bpsk_radio(
-    sps=$sps,
     access_code_threshold=$access_code_threshold,
-    selector=$selector,
+    hw_sample_rate=$hw_sample_rate,
+    resample_rate=$resample_rate,
+    sps=$sps,
 )</make>
-  <callback>set_sps($sps)</callback>
   <callback>set_access_code_threshold($access_code_threshold)</callback>
-  <callback>set_selector($selector)</callback>
-  <param>
-    <name>Samples/symbol</name>
-    <key>sps</key>
-    <value>8</value>
-    <type>raw</type>
-  </param>
+  <callback>set_hw_sample_rate($hw_sample_rate)</callback>
+  <callback>set_resample_rate($resample_rate)</callback>
+  <callback>set_sps($sps)</callback>
   <param>
     <name>Access code threshold</name>
     <key>access_code_threshold</key>
@@ -24,9 +20,21 @@
     <type>raw</type>
   </param>
   <param>
-    <name>SCH/FHSS Selector</name>
-    <key>selector</key>
-    <value>0</value>
+    <name>Hardware Sample Rate</name>
+    <key>hw_sample_rate</key>
+    <value>1e7</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Rational Resampler Rate</name>
+    <key>resample_rate</key>
+    <value>100</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Samples/symbol</name>
+    <key>sps</key>
+    <value>8</value>
     <type>raw</type>
   </param>
   <sink>
@@ -35,7 +43,11 @@
     <vlen>1</vlen>
   </sink>
   <sink>
-    <name>freq_in</name>
+    <name>tx_freq_in</name>
+    <type>message</type>
+  </sink>
+  <sink>
+    <name>rx_freq_in</name>
     <type>message</type>
   </sink>
   <sink>
@@ -54,5 +66,5 @@
   <doc>Jason Noble
 Modem based on J. Malbury's GMSK Modem from gr-mac and Aaron Scher's BPSK Mod/Demod flowgraph
 /home/exadius/.grc_gnuradio/bpsk_radio.py</doc>
-  <grc_source>/home/exadius/qtc-workspace/gr-fhmanet/examples/bpsk_radio.grc</grc_source>
+  <grc_source>/home/exadius/modtool/gr-fhmanet/examples/bpsk_radio_v3.grc</grc_source>
 </block>

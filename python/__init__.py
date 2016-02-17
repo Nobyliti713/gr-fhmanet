@@ -32,4 +32,4 @@ except ImportError:
 
 # import any pure python here
 from fhmanet_mac import fhmanet_mac
-from hopset_import import get_hop_freq
+from fh_msg_tester import fh_msg_tester
